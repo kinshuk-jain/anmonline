@@ -1,0 +1,14 @@
+// 30 sec
+const REQUEST_TIMEOUT = 30 * 1000
+
+// 15 min
+const JWT_EXPIRY_TIMEOUT = 15 * 60
+
+// 8 hours
+const REFRESH_TOKEN_EXPIRY_TIMEOUT = 8 * 60 * 60 * 1000
+
+module.exports = {
+  REFRESH_TOKEN_EXPIRY_TIMEOUT,
+  JWT_EXPIRY_TIMEOUT,
+  REQUEST_TIMEOUT,
+}
