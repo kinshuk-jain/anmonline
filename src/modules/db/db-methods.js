@@ -76,6 +76,25 @@ async function deleteRefreshToken(refreshToken) {
     .promise()
 }
 
+// inefficient scan operation
+async function getNamesFromTable(prefix) {
+  const result = await docClient
+    .scan({
+      TableName: TableNames.USER,
+      ExpressionAttributeNames: {
+        "#name": "name"
+      },
+      FilterExpression: 'begins_with(#name, :prefix)',
+      ExpressionAttributeValues: {
+        ':prefix': prefix,
+      },
+      PageSize: '10'
+    })
+    .promise()
+  const list = result.Items
+  return list.map(v => ({ name: v.name, username: v.userid }))
+}
+
 // generic methods
 async function addRecordInTable(tableName, record) {
   await docClient
@@ -110,4 +129,5 @@ module.exports = {
   deleteRefreshToken,
   updateUserPassword,
   updateUserRefreshToken,
+  getNamesFromTable
 }

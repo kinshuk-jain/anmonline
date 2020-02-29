@@ -1,6 +1,6 @@
 function sanitize(value, type = '') {
   if (typeof value !== 'string') return value
-  const s = value.trim().replace(/[`"')({}=~^%#>*$:!?<|\\\/\[\]]+/g, '')
+  const s = value.trim().replace(/[`")({}=~^%#>*$:!?<|\\\/\[\]]+/g, '')
   if (!type) return s
 
   if (type === 'email') return s.replace(/[,&]+/g, '')

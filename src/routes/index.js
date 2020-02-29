@@ -12,6 +12,7 @@ const loginHandler = require('./login')
 const refreshTokenHandler = require('./refresh-token')
 const logoutHandler = require('./logout')
 const createUserHandler = require('./create-user')
+const getNamesHandler = require('./get-names')
 
 // routes that do not require an access token or csrf protection
 router.get(ROUTES.SERVICE_METADATA, serviceMetadataHandler)
@@ -26,6 +27,13 @@ router.post(
   validateAuthToken,
   validateXRequestedWith,
   logoutHandler
+)
+
+router.post(
+  ROUTES.GET_NAMES,
+  validateAuthToken,
+  validateXRequestedWith,
+  getNamesHandler
 )
 
 router.post(
