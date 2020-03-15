@@ -56,8 +56,8 @@ const refreshTokenTableParams = {
 /**
  * access control table schema
     - userid
-    - read access to docids (hash table)
-    - write access to docids (hash table)
+    - readAllowed: read access to docids (hash table)
+    - writeAllowed: write access to docids (hash table)
  */
 const accessControlTableParams = {
   TableName: TableNames.ACCESS_CONTROL /* required */,

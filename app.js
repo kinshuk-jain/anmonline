@@ -20,7 +20,8 @@ const routes = require('./src/routes')
 const app = express()
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' ? allowedOrigins : '*',
+  origin: process.env.NODE_ENV === 'production' ? allowedOrigins : process.env.HOSTED_DOMAIN,
+  credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,

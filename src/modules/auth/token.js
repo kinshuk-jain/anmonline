@@ -67,9 +67,9 @@ async function createRefreshToken(userid) {
 }
 
 // verify refresh token
-async function verifyRefreshToken(refreshToken) {
+async function verifyRefreshToken(refresh) {
   const { refreshToken, userid } =
-    (await DBMethods.getRefreshToken(refreshToken)) || {}
+    (await DBMethods.getRefreshToken(refresh)) || {}
   const user = await DBMethods.getUser(userid)
   if (user.refreshToken === refreshToken) {
     return userid

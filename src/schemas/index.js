@@ -1,4 +1,8 @@
+const ROUTES = require('../constants/routes')
+
 module.exports = {
-  "/create-user": require('./create-user/request'),
-  "/login": require('./login/request')
+  [ROUTES.CREATE_USER]: require('./create-user/request'),
+  [ROUTES.LOGIN]: require('./login/request'),
+  [ROUTES.GET_NAMES]: require('./get-names/request'),
+  [ROUTES.LOAD_USER]: require('./load-user/request')
 }

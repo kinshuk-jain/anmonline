@@ -60,7 +60,7 @@ const loginHandler = async (req, res) => {
       .cookie('token', refreshToken, {
         maxAge: REFRESH_TOKEN_EXPIRY_TIMEOUT,
         path: ROUTES.REFRESH_TOKEN,
-        secure: true,
+        secure: process.env.NODE_ENV === 'development' ? false : true,
         httpOnly: true,
         domain: process.env.MY_DOMAIN,
         sameSite: 'None',

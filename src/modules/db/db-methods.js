@@ -76,6 +76,21 @@ async function deleteRefreshToken(refreshToken) {
     .promise()
 }
 
+async function getAllDocs(userid, page = 1) {
+  // TODO: find a better way to retrieve docs
+  // const docs = await docClient
+  //   .get({
+  //     TableName: TableNames.ACCESS_CONTROL,
+  //     Key: {
+  //       userid,
+  //     }
+  //   })
+  //   .promise()
+  // if (!docs.Item) return []
+
+  return ['todo']
+}
+
 // inefficient scan operation
 async function getNamesFromTable(prefix) {
   const result = await docClient
@@ -106,22 +121,6 @@ async function addRecordInTable(tableName, record) {
     .promise()
 }
 
-// return await docClient
-// .update({
-//   TableName: TableNames.AUTHORIZATION_CODE,
-//   Key: {
-//     code: hashedAuthCode
-//   },
-//   ConditionExpression: 'code = :code',
-//   UpdateExpression: 'SET revoked = :revoked',
-//   ExpressionAttributeValues: {
-//     ':code': hashedAuthCode,
-//     ':revoked': true
-//   },
-//   ReturnValues: 'ALL_NEW'
-// })
-// .promise()
-
 module.exports = {
   getUser,
   addRecordInTable,
@@ -129,5 +128,6 @@ module.exports = {
   deleteRefreshToken,
   updateUserPassword,
   updateUserRefreshToken,
-  getNamesFromTable
+  getNamesFromTable,
+  getAllDocs
 }

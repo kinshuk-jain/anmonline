@@ -10,7 +10,7 @@ const refreshTokenHandler = async (req, res) => {
   }
 
   if (!req.cookies.token) {
-    returnError()
+    return returnError()
   }
 
   // check if client sent a cookie
@@ -20,7 +20,7 @@ const refreshTokenHandler = async (req, res) => {
   if (!userid) {
     // clear cookie
     res.clearCookie('token')
-    returnError()
+    return returnError()
   }
 
   // retrieve userid for this refreshToken

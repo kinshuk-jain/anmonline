@@ -1,5 +1,5 @@
 module.exports = {
-  "$id": "http://example.com/schemas/schema.json",
+  "$id": "create-user",
   "type": "object",
   "required": ["name", "userid", "email", "canUpload"],
   "properties": {

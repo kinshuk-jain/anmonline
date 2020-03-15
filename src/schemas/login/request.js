@@ -1,5 +1,5 @@
 module.exports = {
-  "$id": "http://example.com/schemas/schema.json",
+  "$id": "login",
   "type": "object",
   "required": ["username", "password", "captcha"],
   "properties": {
