@@ -1,5 +1,5 @@
 const { dynamodb, DBConfig, docClient, TableNames } = require('./index')
-
+const { USER_ROLES } = require('../../constants/general')
 async function createTables() {
   console.log('Preparing DynamoDB local:')
 
@@ -25,19 +25,20 @@ async function createTables() {
 createTables()
   .then(async () => {
     return await docClient
-    .put({
-      TableName: TableNames.USER,
-      Item: {
-        userid: '12345',
-        name: 'admin',
-        role: 'admin',
-        password: '$2b$08$8DC7I7tEwSY1P55EQP2FOujDWRXxK9bT2lXSnh8B6FYxR5JOKVA2q',
-        refreshToken: 'no-empty',
-        email: 'admin@example.com'
-      },
-      ReturnConsumedCapacity: 'TOTAL',
-    })
-    .promise()
+      .put({
+        TableName: TableNames.USER,
+        Item: {
+          userid: '12345',
+          name: 'admin',
+          role: USER_ROLES.ADMIN,
+          password:
+            '$2b$08$8DC7I7tEwSY1P55EQP2FOujDWRXxK9bT2lXSnh8B6FYxR5JOKVA2q',
+          refreshToken: 'no-empty',
+          email: 'admin@example.com',
+        },
+        ReturnConsumedCapacity: 'TOTAL',
+      })
+      .promise()
   })
   .then(() => {
     process.exit(0)

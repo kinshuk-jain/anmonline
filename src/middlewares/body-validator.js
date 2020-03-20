@@ -8,12 +8,12 @@ function bodyValidator(req, res, next) {
     const err = ajv.errors[0]
     return next({
       message: err.message,
-      stack: err.params
+      stack: err.params,
     })
   }
   return next()
 }
 
 module.exports = {
-  bodyValidator
+  bodyValidator,
 }

@@ -1,5 +1,5 @@
-// 30 sec
-const REQUEST_TIMEOUT = 30 * 1000
+// 60 sec
+const REQUEST_TIMEOUT = 60 * 1000
 
 // 15 min
 const JWT_EXPIRY_TIMEOUT = 15 * 60

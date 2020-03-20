@@ -37,7 +37,7 @@ const loginHandler = async (req, res) => {
     // validate captcha
     const { data } = await axios.post(process.env.CAPTCHA_ENDPOINT, {
       response: captcha,
-      secret: process.env.CAPTCHA_SECRET
+      secret: process.env.CAPTCHA_SECRET,
     })
 
     if (!data.success && process.env.NODE_ENV !== 'development') {

@@ -3,7 +3,7 @@ const sgMail = require('@sendgrid/mail')
 const { DBMethods, TableNames } = require('../modules/db')
 const { generatePassword } = require('../modules/auth')
 const { sanitize } = require('../utils')
-const { NO_REPLY_EMAIL } = require('../constants/general')
+const { NO_REPLY_EMAIL, USER_ROLES } = require('../constants/general')
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
@@ -14,7 +14,7 @@ const createUserHandler = async (req, res) => {
   const adminUser = (await DBMethods.getUser(req.userid)) || {}
   const role = adminUser.role
 
-  if (role !== 'admin') {
+  if (role !== USER_ROLES.ADMIN) {
     res.body = {
       error: 'Not authorized',
     }
@@ -39,7 +39,7 @@ const createUserHandler = async (req, res) => {
       email,
       userid,
       refreshToken: 'empty',
-      docsUploaded: [],
+      docsList: [],
       docsAccessedTimes: {},
     })
 

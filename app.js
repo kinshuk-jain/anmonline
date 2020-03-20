@@ -20,12 +20,15 @@ const routes = require('./src/routes')
 const app = express()
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' ? allowedOrigins : process.env.HOSTED_DOMAIN,
+  origin:
+    process.env.NODE_ENV === 'production'
+      ? allowedOrigins
+      : process.env.HOSTED_DOMAIN,
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
-  exposedHeaders: ['WWW-Authenticate']
+  exposedHeaders: ['WWW-Authenticate'],
 }
 
 // helmet
@@ -55,7 +58,7 @@ app.use((req, res, next) => {
 app.use(cookieParser())
 
 app.use([
-  bodyParser.json({ limit: '250kb' }),
+  bodyParser.json({ limit: '25mb' }),
   bodyParser.urlencoded({ extended: false }),
 ])
 

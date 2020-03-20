@@ -4,7 +4,11 @@ const router = require('express').Router()
 const ROUTES = require('../constants/routes')
 
 // middlewares
-const { validateXRequestedWith, validateAuthToken, bodyValidator } = require('../middlewares')
+const {
+  validateXRequestedWith,
+  validateAuthToken,
+  bodyValidator,
+} = require('../middlewares')
 
 // handlers
 const serviceMetadataHandler = require('./service-metadata')
@@ -14,6 +18,8 @@ const logoutHandler = require('./logout')
 const createUserHandler = require('./create-user')
 const getNamesHandler = require('./get-names')
 const loadUserHandler = require('./load-user')
+const uploadFileHandler = require('./upload-file')
+const uploadFileFormHandler = require('./upload-file-form')
 
 // routes that do not require an access token or csrf protection
 router.get(ROUTES.SERVICE_METADATA, serviceMetadataHandler)
@@ -36,6 +42,20 @@ router.post(
   validateAuthToken,
   bodyValidator,
   getNamesHandler
+)
+
+router.post(
+  ROUTES.UPLOAD_FILE,
+  validateXRequestedWith,
+  validateAuthToken,
+  uploadFileHandler
+)
+
+router.post(
+  ROUTES.UPLOAD_FILE_FORM,
+  validateXRequestedWith,
+  validateAuthToken,
+  uploadFileFormHandler
 )
 
 router.post(

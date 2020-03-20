@@ -1,5 +1,6 @@
 const { DBMethods, TableNames } = require('../modules/db')
 const { sanitize } = require('../utils')
+const { USER_ROLES } = require('../constants/general')
 
 // TODO: add pagination support
 const loadUserHandler = async (req, res) => {
@@ -7,7 +8,7 @@ const loadUserHandler = async (req, res) => {
   if (req.userid !== username) {
     const adminUser = (await DBMethods.getUser(req.userid)) || {}
     const role = adminUser.role
-    if (role !== 'admin') {
+    if (role !== USER_ROLES.ADMIN) {
       res.body = {
         error: 'Not authorized',
       }

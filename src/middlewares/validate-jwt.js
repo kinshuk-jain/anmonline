@@ -25,7 +25,7 @@ async function validateAuthToken(req, res, next) {
     console.error({
       type: 'Failed verifying session token',
       message: e.message,
-      stack: e.stack
+      stack: e.stack,
     })
     sendErrorResponse()
   }

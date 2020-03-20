@@ -49,6 +49,30 @@ async function updateUserRefreshToken(userid, token) {
     .promise()
 }
 
+async function updateRecordInUserTable(userid, record) {
+  let updateExpression = ''
+  let expressionAttributeValues = {}
+  Object.keys(record).forEach(k => {
+    updateExpression = `${updateExpression}${k} = :${k}, `
+    expressionAttributeValues[`:${k}`] = record[k]
+  })
+
+  updateExpression = updateExpression.substring(0, updateExpression.length -2)
+
+  return await docClient
+    .update({
+      TableName: TableNames.USER,
+      Key: {
+        userid,
+      },
+      UpdateExpression:
+        `SET ${updateExpression}`,
+      ExpressionAttributeValues: expressionAttributeValues,
+      ReturnValues: 'ALL_NEW',
+    })
+    .promise()
+}
+
 // refresh token table methods
 async function getRefreshToken(refreshToken) {
   const refreshTokenDoc = await docClient
@@ -76,6 +100,8 @@ async function deleteRefreshToken(refreshToken) {
     .promise()
 }
 
+
+// document table methods
 async function getAllDocs(userid, page = 1) {
   // TODO: find a better way to retrieve docs
   // const docs = await docClient
@@ -91,19 +117,56 @@ async function getAllDocs(userid, page = 1) {
   return ['todo']
 }
 
-// inefficient scan operation
+async function updateRecordInDocTable(docid, record) {
+  let updateExpression = ''
+  let expressionAttributeValues = {}
+  Object.keys(record).forEach(k => {
+    updateExpression = `${updateExpression}${k} = :${k}, `
+    expressionAttributeValues[`:${k}`] = record[k]
+  })
+
+  updateExpression = updateExpression.substring(0, updateExpression.length -2)
+
+  return await docClient
+    .update({
+      TableName: TableNames.DOCUMENTS,
+      Key: {
+        docid,
+      },
+      UpdateExpression:
+        `SET ${updateExpression}`,
+      ExpressionAttributeValues: expressionAttributeValues,
+      ReturnValues: 'ALL_NEW',
+    })
+    .promise()
+}
+
+async function deleteRecordFromDocTable(docid) {
+  return await docClient
+  .delete({
+    TableName: TableNames.DOCUMENTS,
+    Key: {
+      docid,
+    }
+  })
+  .promise()
+}
+
+// NOTE: inefficient scan operation
 async function getNamesFromTable(prefix) {
   const result = await docClient
     .scan({
       TableName: TableNames.USER,
       ExpressionAttributeNames: {
-        "#name": "name"
+        '#name': 'name',
+        '#role': 'role'
       },
-      FilterExpression: 'begins_with(#name, :prefix)',
+      FilterExpression: 'begins_with(#name, :prefix) AND #role <> :admin',
       ExpressionAttributeValues: {
         ':prefix': prefix,
+        ':admin': 'admin'
       },
-      PageSize: '10'
+      PageSize: '10',
     })
     .promise()
   const list = result.Items
@@ -129,5 +192,8 @@ module.exports = {
   updateUserPassword,
   updateUserRefreshToken,
   getNamesFromTable,
-  getAllDocs
+  getAllDocs,
+  updateRecordInDocTable,
+  updateRecordInUserTable,
+  deleteRecordFromDocTable
 }

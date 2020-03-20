@@ -1,10 +1,9 @@
 const TableNames = {
   USER: 'User',
   DOCUMENTS: 'Documents',
-  ACCESS_CONTROL: 'AccessControl',
   REFRESH_TOKEN: 'RefreshToken',
 }
-
+// due to dynamodb limits each item size cannot be more than 400kb
 /**
  * user table schema
     - role -> user(cannot upload), owner(can upload), admin(can do anything)
@@ -13,8 +12,10 @@ const TableNames = {
     - password
     - refreshToken
     - email
-    - docsUploaded
+    - docsList: can contain duplicate values
+    - numOfDocsUploaded
     - docsAccessedTimes
+    - uploadPendingList
   */
 const userTableParams = {
   TableName: TableNames.USER /* required */,
@@ -54,45 +55,19 @@ const refreshTokenTableParams = {
 }
 
 /**
- * access control table schema
-    - userid
-    - readAllowed: read access to docids (hash table)
-    - writeAllowed: write access to docids (hash table)
- */
-const accessControlTableParams = {
-  TableName: TableNames.ACCESS_CONTROL /* required */,
-  AttributeDefinitions: [
-    /* required */
-    { AttributeName: 'docid', AttributeType: 'S' },
-    { AttributeName: 'userid', AttributeType: 'S' },
-  ],
-  // partition key, required
-  KeySchema: [
-    { AttributeName: 'userid', KeyType: 'HASH' },
-    { AttributeName: 'docid', KeyType: 'RANGE' },
-  ],
-  ProvisionedThroughput: {
-    /* required */
-    // number of strongly consistent reads per second or double eventually consistent reads
-    ReadCapacityUnits: 10,
-    // data in KBs to be written per second. Setting it to 10KB
-    WriteCapacityUnits: 10,
-  },
-}
-
-/**
  * documents table schema
-    - type
+    - docType
     - size
-    - format
+    - mimeType
     - docid
-    - created for (userid and name)
-    - uploaded by (userid and name)
-    - date created
-    - last accessed on (means time)
-    - last accessed by (userid)
-    - times accessed
-    - s3 reference
+    - createdFor (userid and name)
+    - uploadedBy (userid and name)
+    - dateCreated
+    - lastAccessedOn (means time)
+    - lastAccessedBy (userid)
+    - timesAccessed
+    - s3Reference
+    - metadata
  */
 const documentsTableParams = {
   TableName: TableNames.DOCUMENTS /* required */,
@@ -118,10 +93,6 @@ const DBConfig = {
   documents: {
     name: TableNames.DOCUMENTS,
     params: documentsTableParams,
-  },
-  accessTable: {
-    name: TableNames.ACCESS_CONTROL,
-    params: accessControlTableParams,
   },
   refreshToken: {
     name: TableNames.REFRESH_TOKEN,
