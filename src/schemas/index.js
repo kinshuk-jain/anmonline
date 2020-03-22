@@ -5,5 +5,5 @@ module.exports = {
   [ROUTES.LOGIN]: require('./login/request'),
   [ROUTES.GET_NAMES]: require('./get-names/request'),
   [ROUTES.LOAD_USER]: require('./load-user/request'),
-  [ROUTES.UPLOAD_FILE_FORM]: require('./upload-doc/request')
+  [ROUTES.UPLOAD_FILE_FORM]: require('./upload-doc/request'),
 }

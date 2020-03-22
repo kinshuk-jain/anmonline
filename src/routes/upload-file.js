@@ -52,8 +52,10 @@ const uploadFileHandler = async (req, res, next) => {
       fileType = contentType.split('Content-Type:')[1]
       fileType = fileType ? fileType.trim() : fileType
       // if file type is any of the disallowed mimetypes, return error
-      if(DISALLOWED_MIME_TYPES.some(mime => fileType.search(mime) !== -1)) {
-        return res.send(400).send({ status: 'failed', error: 'File type not allowed' })
+      if (DISALLOWED_MIME_TYPES.some(mime => fileType.search(mime) !== -1)) {
+        return res
+          .send(400)
+          .send({ status: 'failed', error: 'File type not allowed' })
       }
       // read fourth line: Empty space, indicates beginning of data from next line
       index = data.indexOf(EOL, index + 1)

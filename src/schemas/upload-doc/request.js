@@ -7,8 +7,8 @@ module.exports = {
     year: { type: 'string' },
     docType: {
       type: 'string',
-      enum: ['audit-report', 'finance-report', 'gullu-report']
+      enum: ['audit-report', 'finance-report', 'gullu-report'],
     },
-    numOfFilesUploaded: { type: 'number' }
+    numOfFilesUploaded: { type: 'number' },
   },
 }

@@ -57,7 +57,7 @@ async function updateRecordInUserTable(userid, record) {
     expressionAttributeValues[`:${k}`] = record[k]
   })
 
-  updateExpression = updateExpression.substring(0, updateExpression.length -2)
+  updateExpression = updateExpression.substring(0, updateExpression.length - 2)
 
   return await docClient
     .update({
@@ -65,8 +65,7 @@ async function updateRecordInUserTable(userid, record) {
       Key: {
         userid,
       },
-      UpdateExpression:
-        `SET ${updateExpression}`,
+      UpdateExpression: `SET ${updateExpression}`,
       ExpressionAttributeValues: expressionAttributeValues,
       ReturnValues: 'ALL_NEW',
     })
@@ -100,7 +99,6 @@ async function deleteRefreshToken(refreshToken) {
     .promise()
 }
 
-
 // document table methods
 async function getAllDocs(userid, page = 1) {
   // TODO: find a better way to retrieve docs
@@ -125,7 +123,7 @@ async function updateRecordInDocTable(docid, record) {
     expressionAttributeValues[`:${k}`] = record[k]
   })
 
-  updateExpression = updateExpression.substring(0, updateExpression.length -2)
+  updateExpression = updateExpression.substring(0, updateExpression.length - 2)
 
   return await docClient
     .update({
@@ -133,8 +131,7 @@ async function updateRecordInDocTable(docid, record) {
       Key: {
         docid,
       },
-      UpdateExpression:
-        `SET ${updateExpression}`,
+      UpdateExpression: `SET ${updateExpression}`,
       ExpressionAttributeValues: expressionAttributeValues,
       ReturnValues: 'ALL_NEW',
     })
@@ -143,13 +140,13 @@ async function updateRecordInDocTable(docid, record) {
 
 async function deleteRecordFromDocTable(docid) {
   return await docClient
-  .delete({
-    TableName: TableNames.DOCUMENTS,
-    Key: {
-      docid,
-    }
-  })
-  .promise()
+    .delete({
+      TableName: TableNames.DOCUMENTS,
+      Key: {
+        docid,
+      },
+    })
+    .promise()
 }
 
 // NOTE: inefficient scan operation
@@ -159,12 +156,12 @@ async function getNamesFromTable(prefix) {
       TableName: TableNames.USER,
       ExpressionAttributeNames: {
         '#name': 'name',
-        '#role': 'role'
+        '#role': 'role',
       },
       FilterExpression: 'begins_with(#name, :prefix) AND #role <> :admin',
       ExpressionAttributeValues: {
         ':prefix': prefix,
-        ':admin': 'admin'
+        ':admin': 'admin',
       },
       PageSize: '10',
     })
@@ -195,5 +192,5 @@ module.exports = {
   getAllDocs,
   updateRecordInDocTable,
   updateRecordInUserTable,
-  deleteRecordFromDocTable
+  deleteRecordFromDocTable,
 }

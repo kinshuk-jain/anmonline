@@ -10,17 +10,17 @@ const DISALLOWED_MIME_TYPES = [
   'text/vbscript',
   'text/html',
   /video\/.*/,
-  /audio\/.*/
+  /audio\/.*/,
 ]
 
 const USER_ROLES = {
   ADMIN: 'admin',
   OWNER: 'owner',
-  USER: 'user'
+  USER: 'user',
 }
 
 module.exports = {
   NO_REPLY_EMAIL,
   USER_ROLES,
-  DISALLOWED_MIME_TYPES
+  DISALLOWED_MIME_TYPES,
 }
