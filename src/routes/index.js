@@ -29,19 +29,13 @@ router.post(ROUTES.LOGIN, loginHandler)
 router.post(ROUTES.REFRESH_TOKEN, validateXRequestedWith, refreshTokenHandler)
 
 // routes that require access token and csrf protection
+
+// no body validation
 router.post(
   ROUTES.LOGOUT,
   validateXRequestedWith,
   validateAuthToken,
   logoutHandler
-)
-
-router.post(
-  ROUTES.GET_NAMES,
-  validateXRequestedWith,
-  validateAuthToken,
-  bodyValidator,
-  getNamesHandler
 )
 
 router.post(
@@ -51,10 +45,20 @@ router.post(
   uploadFileHandler
 )
 
+// with body validation
+router.post(
+  ROUTES.GET_NAMES,
+  validateXRequestedWith,
+  validateAuthToken,
+  bodyValidator,
+  getNamesHandler
+)
+
 router.post(
   ROUTES.UPLOAD_FILE_FORM,
   validateXRequestedWith,
   validateAuthToken,
+  bodyValidator,
   uploadFileFormHandler
 )
 

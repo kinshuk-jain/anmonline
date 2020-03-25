@@ -100,19 +100,19 @@ async function deleteRefreshToken(refreshToken) {
 }
 
 // document table methods
-async function getAllDocs(userid, page = 1) {
-  // TODO: find a better way to retrieve docs
-  // const docs = await docClient
-  //   .get({
-  //     TableName: TableNames.ACCESS_CONTROL,
-  //     Key: {
-  //       userid,
-  //     }
-  //   })
-  //   .promise()
-  // if (!docs.Item) return []
+async function getDocument(docid) {
+  const doc = await docClient
+    .get({
+      TableName: TableNames.DOCUMENTS,
+      Key: {
+        docid,
+      },
+    })
+    .promise()
 
-  return ['todo']
+  if (!doc.Item) return undefined
+
+  return doc.Item
 }
 
 async function updateRecordInDocTable(docid, record) {
@@ -189,8 +189,8 @@ module.exports = {
   updateUserPassword,
   updateUserRefreshToken,
   getNamesFromTable,
-  getAllDocs,
   updateRecordInDocTable,
   updateRecordInUserTable,
   deleteRecordFromDocTable,
+  getDocument,
 }

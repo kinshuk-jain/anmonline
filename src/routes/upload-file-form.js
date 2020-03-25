@@ -10,13 +10,10 @@ const uploadFileFormHandler = async (req, res) => {
 
   const uploadedForUser = (await dbmethods.getUser(username)) || {}
   if (uploadedForUser.userid !== username || username === 'admin') {
-    return res
-      .status(400)
-      .send({
-        status: 'failed',
-        error:
-          'Name of user for which the document was uploaded is not correct',
-      })
+    return res.status(400).send({
+      status: 'failed',
+      error: 'Name of user for which the document was uploaded is not correct',
+    })
   }
   // do not allow uploading documents for self
   if (uploadedForUser.userid === user.userid) {
@@ -29,12 +26,10 @@ const uploadFileFormHandler = async (req, res) => {
     user.role !== USER_ROLES.ADMIN &&
     uploadedForUser.role !== USER_ROLES.ADMIN
   ) {
-    return res
-      .status(400)
-      .send({
-        status: 'failed',
-        error: 'You cannot upload files for this user',
-      })
+    return res.status(400).send({
+      status: 'failed',
+      error: 'You cannot upload files for this user',
+    })
   }
 
   const pendingList = user.uploadPendingList || []
@@ -57,17 +52,18 @@ const uploadFileFormHandler = async (req, res) => {
     })
   })
 
-  await dbmethods.updateRecordInUserTable(uploadedForUser.userid, {
-    docsList: (uploadedForUser.docsList || []).concat(
-      pendingList.slice(-numOfFilesUploaded)
-    ),
-  })
   await dbmethods.updateRecordInUserTable(user.userid, {
     numOfDocsUploaded:
       (user.numOfDocsUploaded ? 0 : +user.numOfDocsUploaded) +
       numOfFilesUploaded +
       '',
     uploadPendingList: [],
+  })
+
+  await dbmethods.updateRecordInUserTable(uploadedForUser.userid, {
+    docsList: (uploadedForUser.docsList || []).concat(
+      pendingList.slice(-numOfFilesUploaded)
+    ),
   })
 
   pendingList

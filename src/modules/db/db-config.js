@@ -60,6 +60,7 @@ const refreshTokenTableParams = {
     - size
     - mimeType
     - docid
+    - docName
     - createdFor (userid and name)
     - uploadedBy (userid and name)
     - dateCreated

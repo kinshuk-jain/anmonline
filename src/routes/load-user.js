@@ -1,29 +1,56 @@
-const { DBMethods, TableNames } = require('../modules/db')
+const { DBMethods } = require('../modules/db')
 const { sanitize } = require('../utils')
-const { USER_ROLES } = require('../constants/general')
+const { USER_ROLES, PAGINATION_LIMIT } = require('../constants/general')
 
-// TODO: add pagination support
+// For now one admin can fetch/delete data of other admins
+
+// TODO: add support for filters
 const loadUserHandler = async (req, res) => {
+  const { role, userid, docsList = [] } =
+    (await DBMethods.getUser(req.userid)) || {}
   let { username } = req.body
-  if (req.userid !== username) {
-    const adminUser = (await DBMethods.getUser(req.userid)) || {}
-    const role = adminUser.role
-    if (role !== USER_ROLES.ADMIN) {
-      res.body = {
-        error: 'Not authorized',
-      }
-      return res.status(403).send(res.body)
-    }
-  }
+  let { q: start } = req.query
+  start = Math.abs(+sanitize(start))
+  // NOTE: assumes there are not more than 100000 docs for a user
+  start = start !== start || start > 100000 ? 0 : start
 
   username = sanitize(username)
-  // look in access control table and get all docs
-  const docsList = (await DBMethods.getAllDocs(username)) || []
 
-  res.body = {
-    docs: docsList,
+  const getAllDocs = async list => {
+    let results = []
+
+    for (let docid of list) {
+      const doc = await DBMethods.getDocument(docid)
+      doc.createdBy = doc.uploadedBy.name
+      delete doc['createdFor']
+      delete doc['mimeType']
+      delete doc['s3Reference']
+      // if user is admin or is user who uploaded it, allow deletion of doc
+      if (userid === doc.uploadedBy.userid || role === USER_ROLES.ADMIN) {
+        doc.deleteAllowed = true
+      }
+      delete doc['uploadedBy']
+      results.push(doc)
+    }
+    return results
   }
-  return res.status(200).send(res.body)
+
+  if (!username || userid === username) {
+    const results = await getAllDocs(
+      docsList.slice(start, start + PAGINATION_LIMIT)
+    )
+    return res.status(200).send({ results })
+  }
+
+  if (role === USER_ROLES.ADMIN) {
+    const user = (await DBMethods.getUser(username)) || {}
+    const results = await getAllDocs(
+      (user.docsList || []).slice(start, start + PAGINATION_LIMIT)
+    )
+    return res.status(200).send({ results })
+  }
+
+  return res.status(403).send({ error: 'Not Authorized' })
 }
 
 module.exports = loadUserHandler

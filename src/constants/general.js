@@ -1,5 +1,7 @@
 const NO_REPLY_EMAIL = 'no-reply@kinarva.com'
 
+const PAGINATION_LIMIT = 50
+
 const DISALLOWED_MIME_TYPES = [
   'application/octet-stream',
   'application/x-javascript',
@@ -23,4 +25,5 @@ module.exports = {
   NO_REPLY_EMAIL,
   USER_ROLES,
   DISALLOWED_MIME_TYPES,
+  PAGINATION_LIMIT,
 }

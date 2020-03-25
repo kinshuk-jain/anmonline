@@ -54,7 +54,7 @@ const uploadFileHandler = async (req, res, next) => {
       // if file type is any of the disallowed mimetypes, return error
       if (DISALLOWED_MIME_TYPES.some(mime => fileType.search(mime) !== -1)) {
         return res
-          .send(400)
+          .status(400)
           .send({ status: 'failed', error: 'File type not allowed' })
       }
       // read fourth line: Empty space, indicates beginning of data from next line
@@ -91,6 +91,7 @@ const uploadFileHandler = async (req, res, next) => {
     await dbmethods.addRecordInTable(TableNames.DOCUMENTS, {
       size: fileSize,
       docid,
+      docName: filename,
       mimeType: fileType,
       uploadedBy: user.userid,
       dateCreated: Date.now().toString(),

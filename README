@@ -34,3 +34,7 @@ Add jwt refresh logic
 Test admin user - 
 userid: 12345
 password: nznauUUMKd
+
+Normal test user - 
+userid: test-user
+password: vaqvVbeGAU

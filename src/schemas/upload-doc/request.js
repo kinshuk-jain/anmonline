@@ -1,5 +1,5 @@
 module.exports = {
-  $id: 'login',
+  $id: 'upload-doc',
   type: 'object',
   required: ['username', 'year', 'docType', 'numOfFilesUploaded'],
   properties: {

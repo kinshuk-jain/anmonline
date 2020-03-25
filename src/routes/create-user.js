@@ -7,7 +7,7 @@ const { NO_REPLY_EMAIL, USER_ROLES } = require('../constants/general')
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-// TODO: add email address verification before sending emails
+// Future work: add email address verification before sending emails
 
 // this cannot be used to create admin users. They will be created manually
 const createUserHandler = async (req, res) => {
