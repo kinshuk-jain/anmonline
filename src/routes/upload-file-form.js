@@ -1,5 +1,6 @@
 const dbmethods = require('../modules/db/db-methods')
 const { USER_ROLES } = require('../constants/general')
+const { s3Delete } = require('../modules/s3')
 
 const uploadFileFormHandler = async (req, res) => {
   const user = (await dbmethods.getUser(req.userid)) || {}
@@ -69,7 +70,7 @@ const uploadFileFormHandler = async (req, res) => {
   pendingList
     .slice(0, pendingList.length - numOfFilesUploaded)
     .forEach(async docid => {
-      // TODO: delete from s3
+      await s3Delete(docid)
       await dbmethods.deleteRecordFromDocTable(docid)
     })
 

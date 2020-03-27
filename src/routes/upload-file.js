@@ -2,8 +2,9 @@ const dbmethods = require('../modules/db/db-methods')
 const { TableNames } = require('../modules/db/db-config')
 const { USER_ROLES, DISALLOWED_MIME_TYPES } = require('../constants/general')
 const uuidv4 = require('uuid/v4')
+const { s3Upload } = require('../modules/s3')
+const Stream = require('stream')
 
-// TODO: s3 integration
 const uploadFileHandler = async (req, res, next) => {
   const user = (await dbmethods.getUser(req.userid)) || {}
   if (user.role !== USER_ROLES.ADMIN && user.role !== USER_ROLES.OWNER) {
@@ -22,6 +23,10 @@ const uploadFileHandler = async (req, res, next) => {
   let boundary
   let filename
   let fileType
+  let docid = uuidv4()
+  let uploadObj
+  const writableStream = new Stream.Writable()
+  writableStream._write = () => {} // no-op
 
   // client sending data
   req.on('data', data => {
@@ -61,33 +66,48 @@ const uploadFileHandler = async (req, res, next) => {
       index = data.indexOf(EOL, index + 1)
       // remove headers
       data = data.slice(index + 1, data.length)
+      // start uploading to s3
+      const d = new Date()
+      uploadObj = s3Upload(docid, writableStream, {
+        name: filename,
+        type: fileType,
+        size: fileSize,
+        date: [d.getFullYear(), `${d.getMonth() + 1}`, `${d.getDate()}`].join(
+          '-'
+        ),
+      })
     }
     let ind = data.indexOf(boundary)
     if (ind > -1) {
       // pipe data
+      writableStream.write(data)
     } else {
       // pipe data.slice(0, ind - 1 - EOL.length)
+      writableStream.write(data.slice(0, ind - 1 - EOL.length))
     }
   })
 
   // client cancelled request
   req.on('aborted', e => {
     // delete whatever you are piping to s3
+    uploadObj.abort()
+    writableStream.end()
     return res.status(400).send({ status: 'aborted' })
   })
 
   // error in request
   req.on('error', e => {
     // delete whatever you are piping to s3
+    uploadObj.abort()
+    writableStream.end()
     return next(e)
   })
 
   // client finished sending data
   req.on('end', async e => {
-    const docid = uuidv4()
     let uploadPendingList = user.uploadPendingList || []
     uploadPendingList.push(docid)
-    // TODO: save file and metadata for this in s3
+    writableStream.end()
     await dbmethods.addRecordInTable(TableNames.DOCUMENTS, {
       size: fileSize,
       docid,
@@ -105,6 +125,8 @@ const uploadFileHandler = async (req, res, next) => {
     // req timed out
     if (res.statusCode === 408) {
       // delete whatever you piped to s3
+      uploadObj.abort()
+      writableStream.end()
     }
   })
 }
