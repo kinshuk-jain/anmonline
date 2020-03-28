@@ -2,7 +2,7 @@ const AWS = require('aws-sdk')
 
 AWS.config.update({
   region: process.env.AWS_REGION,
-  endpoint: process.env.AWS_ENDPOINT,
+  endpoint: process.env.AWS_DB_ENDPOINT,
   ...(process.env.NODE_ENV !== 'production'
     ? {
         accessKeyId: 'akid',

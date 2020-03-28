@@ -1,0 +1,11 @@
+version: '3'
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 4572:4572
+      - 8000:8000
+    environment:
+      - SERVICES=s3:4572,dynamodb:8000
+      - DEFAULT_REGION=${AWS_REGION}
+      - PORT_WEB_UI=8081

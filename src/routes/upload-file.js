@@ -5,6 +5,7 @@ const uuidv4 = require('uuid/v4')
 const { s3Upload } = require('../modules/s3')
 const Stream = require('stream')
 
+// TODO: compress files before uploading to s3
 const uploadFileHandler = async (req, res, next) => {
   const user = (await dbmethods.getUser(req.userid)) || {}
   if (user.role !== USER_ROLES.ADMIN && user.role !== USER_ROLES.OWNER) {
@@ -25,8 +26,8 @@ const uploadFileHandler = async (req, res, next) => {
   let fileType
   let docid = uuidv4()
   let uploadObj
-  const writableStream = new Stream.Writable()
-  writableStream._write = () => {} // no-op
+  const rStream = new Stream.Readable()
+  rStream._read = () => {} // no-op
 
   // client sending data
   req.on('data', data => {
@@ -68,7 +69,7 @@ const uploadFileHandler = async (req, res, next) => {
       data = data.slice(index + 1, data.length)
       // start uploading to s3
       const d = new Date()
-      uploadObj = s3Upload(docid, writableStream, {
+      uploadObj = s3Upload(docid, rStream, {
         name: filename,
         type: fileType,
         size: fileSize,
@@ -80,10 +81,10 @@ const uploadFileHandler = async (req, res, next) => {
     let ind = data.indexOf(boundary)
     if (ind > -1) {
       // pipe data
-      writableStream.write(data)
+      rStream.push(data)
     } else {
       // pipe data.slice(0, ind - 1 - EOL.length)
-      writableStream.write(data.slice(0, ind - 1 - EOL.length))
+      rStream.push(data.slice(0, ind - 1 - EOL.length))
     }
   })
 
@@ -91,7 +92,7 @@ const uploadFileHandler = async (req, res, next) => {
   req.on('aborted', e => {
     // delete whatever you are piping to s3
     uploadObj.abort()
-    writableStream.end()
+    rStream.push(null)
     return res.status(400).send({ status: 'aborted' })
   })
 
@@ -99,7 +100,7 @@ const uploadFileHandler = async (req, res, next) => {
   req.on('error', e => {
     // delete whatever you are piping to s3
     uploadObj.abort()
-    writableStream.end()
+    rStream.push(null)
     return next(e)
   })
 
@@ -107,7 +108,8 @@ const uploadFileHandler = async (req, res, next) => {
   req.on('end', async e => {
     let uploadPendingList = user.uploadPendingList || []
     uploadPendingList.push(docid)
-    writableStream.end()
+    uploadObj.promise().then(r => console.log(r))
+    rStream.push(null)
     await dbmethods.addRecordInTable(TableNames.DOCUMENTS, {
       size: fileSize,
       docid,
@@ -126,7 +128,7 @@ const uploadFileHandler = async (req, res, next) => {
     if (res.statusCode === 408) {
       // delete whatever you piped to s3
       uploadObj.abort()
-      writableStream.end()
+      rStream.push(null)
     }
   })
 }

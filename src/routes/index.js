@@ -34,7 +34,7 @@ router.post(ROUTES.REFRESH_TOKEN, validateXRequestedWith, refreshTokenHandler)
 router.post(
   ROUTES.LOGOUT,
   validateXRequestedWith,
-  validateAuthToken,
+  validateAuthToken, // TODO: we should not need token validation for logout
   logoutHandler
 )
 
