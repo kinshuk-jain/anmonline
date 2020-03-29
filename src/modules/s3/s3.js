@@ -21,7 +21,8 @@ function s3Upload(docid, data, Metadata) {
     {
       Bucket: process.env.BUCKET_NAME,
       Tagging: S3_TAG,
-      ContentLength: Metadata.size,
+      // setting this causes small file uploads to hang sometimes i.e. less than 50KB
+      // ContentLength: Metadata.size,
       Body: data,
       Key: `${docid}`, // improving key names makes retrieval harder, for now going with this only
       ServerSideEncryption: ENC_ALGORITHM,

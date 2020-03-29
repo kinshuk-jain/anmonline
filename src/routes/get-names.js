@@ -1,4 +1,4 @@
-const { DBMethods, TableNames } = require('../modules/db')
+const { DBMethods } = require('../modules/db')
 const { sanitize } = require('../utils')
 const { USER_ROLES } = require('../constants/general')
 
@@ -17,11 +17,9 @@ const getNamesHandler = async (req, res) => {
 
   prefix = sanitize(prefix)
   const nameList = (await DBMethods.getNamesFromTable(prefix)) || []
-
-  res.body = {
+  return res.status(200).send({
     suggestions: nameList,
-  }
-  return res.status(200).send(res.body)
+  })
 }
 
 module.exports = getNamesHandler

@@ -5,7 +5,7 @@ function sanitize(value, type = '') {
 
   if (type === 'email') return s.replace(/[,&]+/g, '')
   if (type === 'name') return s.replace(/[@]+/g, '')
-  if (type === 'id') return s.replace(/[^a-z0-9]+/gi, '')
+  if (type === 'id') return s.replace(/[^-a-z0-9]+/gi, '')
 }
 
 module.exports = {

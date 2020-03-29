@@ -20,15 +20,18 @@ const getNamesHandler = require('./get-names')
 const loadUserHandler = require('./load-user')
 const uploadFileHandler = require('./upload-file')
 const uploadFileFormHandler = require('./upload-file-form')
+const downloadFileHandler = require('./download-file')
 
 // routes that do not require an access token or csrf protection
 router.get(ROUTES.SERVICE_METADATA, serviceMetadataHandler)
-router.post(ROUTES.LOGIN, loginHandler)
 
 // routes that require csrf protection
 router.post(ROUTES.REFRESH_TOKEN, validateXRequestedWith, refreshTokenHandler)
+router.post(ROUTES.LOGIN, validateXRequestedWith, loginHandler)
 
-// routes that require access token and csrf protection
+/**
+ * routes that require access token and csrf protection
+ */
 
 // no body validation
 router.post(
@@ -43,6 +46,13 @@ router.post(
   validateXRequestedWith,
   validateAuthToken,
   uploadFileHandler
+)
+
+router.get(
+  ROUTES.DOWNLOAD_FILE,
+  validateXRequestedWith,
+  validateAuthToken,
+  downloadFileHandler
 )
 
 // with body validation

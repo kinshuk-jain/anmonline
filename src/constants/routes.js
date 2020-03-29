@@ -7,6 +7,7 @@ const GET_NAMES = '/get-names'
 const LOAD_USER = '/load-user'
 const UPLOAD_FILE = '/upload-file'
 const UPLOAD_FILE_FORM = '/upload-file/submit'
+const DOWNLOAD_FILE = '/download'
 
 module.exports = {
   SERVICE_METADATA,
@@ -18,4 +19,5 @@ module.exports = {
   LOAD_USER,
   UPLOAD_FILE,
   UPLOAD_FILE_FORM,
+  DOWNLOAD_FILE,
 }

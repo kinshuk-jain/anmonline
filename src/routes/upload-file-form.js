@@ -11,7 +11,7 @@ const uploadFileFormHandler = async (req, res) => {
 
   const uploadedForUser = (await dbmethods.getUser(username)) || {}
   if (uploadedForUser.userid !== username || username === 'admin') {
-    return res.status(400).send({
+    return res.status(403).send({
       status: 'failed',
       error: 'Name of user for which the document was uploaded is not correct',
     })
@@ -19,7 +19,7 @@ const uploadFileFormHandler = async (req, res) => {
   // do not allow uploading documents for self
   if (uploadedForUser.userid === user.userid) {
     return res
-      .status(400)
+      .status(403)
       .send({ status: 'failed', error: 'Cannot upload document for yourself' })
   }
   // allow non admins only to upload to admin
@@ -27,7 +27,7 @@ const uploadFileFormHandler = async (req, res) => {
     user.role !== USER_ROLES.ADMIN &&
     uploadedForUser.role !== USER_ROLES.ADMIN
   ) {
-    return res.status(400).send({
+    return res.status(403).send({
       status: 'failed',
       error: 'You cannot upload files for this user',
     })

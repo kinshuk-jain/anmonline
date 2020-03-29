@@ -2,7 +2,7 @@ const { DBMethods } = require('../modules/db')
 const { sanitize } = require('../utils')
 const { USER_ROLES, PAGINATION_LIMIT } = require('../constants/general')
 
-// For now one admin can fetch/delete data of other admins
+// NOTE: For now one admin can fetch/delete data of other admins
 
 // TODO: add support for filters
 const loadUserHandler = async (req, res) => {
@@ -11,8 +11,8 @@ const loadUserHandler = async (req, res) => {
   let { username } = req.body
   let { q: start } = req.query
   start = Math.abs(+sanitize(start))
-  // NOTE: assumes there are not more than 100000 docs for a user
-  start = start !== start || start > 100000 ? 0 : start
+  // NOTE: assumes there are not more than 10000 docs for a user
+  start = start !== start || start > 10000 ? 0 : start
 
   username = sanitize(username)
 

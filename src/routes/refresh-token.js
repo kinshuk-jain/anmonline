@@ -6,7 +6,7 @@ const refreshTokenHandler = async (req, res) => {
     res.body = {
       error: 'Forbidden',
     }
-    return res.status(403).send(req.body)
+    return res.status(401).send({ error: 'Forbidden' })
   }
 
   if (!req.cookies.token) {
@@ -23,7 +23,7 @@ const refreshTokenHandler = async (req, res) => {
     return returnError()
   }
 
-  // retrieve userid for this refreshToken
+  // get new access token
   const accessToken = await createSessionToken(userid)
 
   return res.status(200).send({

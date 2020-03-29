@@ -28,7 +28,12 @@ const corsOptions = {
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
-  exposedHeaders: ['WWW-Authenticate'],
+  exposedHeaders: [
+    'WWW-Authenticate',
+    'Content-Type',
+    'Content-Length',
+    'Content-Disposition',
+  ],
 }
 
 // helmet

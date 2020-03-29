@@ -1,15 +1,15 @@
+const uuidv4 = require('uuid/v4')
+const Stream = require('stream')
 const dbmethods = require('../modules/db/db-methods')
 const { TableNames } = require('../modules/db/db-config')
 const { USER_ROLES, DISALLOWED_MIME_TYPES } = require('../constants/general')
-const uuidv4 = require('uuid/v4')
 const { s3Upload } = require('../modules/s3')
-const Stream = require('stream')
 
 // TODO: compress files before uploading to s3
 const uploadFileHandler = async (req, res, next) => {
   const user = (await dbmethods.getUser(req.userid)) || {}
   if (user.role !== USER_ROLES.ADMIN && user.role !== USER_ROLES.OWNER) {
-    return res.status(401).send({ error: 'Not allowed' })
+    return res.status(403).send({ error: 'Not allowed' })
   }
   let fileSize = req.headers['content-length']
 
@@ -27,7 +27,7 @@ const uploadFileHandler = async (req, res, next) => {
   let docid = uuidv4()
   let uploadObj
   const rStream = new Stream.Readable()
-  rStream._read = () => {} // no-op
+  rStream._read = () => {} // no-op, but required for readable stream
 
   // client sending data
   req.on('data', data => {
@@ -38,7 +38,7 @@ const uploadFileHandler = async (req, res, next) => {
       if (data.toString('utf8', index - 1, index) === '\r') {
         EOL = '\r\n'
       }
-      boundary = data.toString('utf8', 0, index)
+      boundary = data.toString('utf8', 0, index - EOL.length + 1)
 
       // read second line: Content-disposition header
       index = data.indexOf(EOL, index + 1)
@@ -48,7 +48,7 @@ const uploadFileHandler = async (req, res, next) => {
       filename = filename ? filename.slice(0, filename.length - 1) : filename
 
       // read third line: Content-type header
-      index = data.indexOf(EOL, index + 1)
+      index = data.indexOf(EOL, index + EOL.length)
       const contentType =
         data.toString(
           'utf8',
@@ -57,16 +57,19 @@ const uploadFileHandler = async (req, res, next) => {
         ) || ''
       fileType = contentType.split('Content-Type:')[1]
       fileType = fileType ? fileType.trim() : fileType
+
       // if file type is any of the disallowed mimetypes, return error
       if (DISALLOWED_MIME_TYPES.some(mime => fileType.search(mime) !== -1)) {
         return res
-          .status(400)
+          .status(403)
           .send({ status: 'failed', error: 'File type not allowed' })
       }
+
       // read fourth line: Empty space, indicates beginning of data from next line
-      index = data.indexOf(EOL, index + 1)
+      index = data.indexOf(EOL, index + EOL.length)
+
       // remove headers
-      data = data.slice(index + 1, data.length)
+      data = data.slice(index + EOL.length)
       // start uploading to s3
       const d = new Date()
       uploadObj = s3Upload(docid, rStream, {
@@ -78,19 +81,20 @@ const uploadFileHandler = async (req, res, next) => {
         ),
       })
     }
+
     let ind = data.indexOf(boundary)
-    if (ind > -1) {
+    if (ind === -1) {
       // pipe data
       rStream.push(data)
     } else {
-      // pipe data.slice(0, ind - 1 - EOL.length)
-      rStream.push(data.slice(0, ind - 1 - EOL.length))
+      // pipe data.slice(0, ind - 1)
+      rStream.push(data.slice(0, ind - 1))
     }
   })
 
   // client cancelled request
   req.on('aborted', e => {
-    // delete whatever you are piping to s3
+    // abort piping to s3 and end stream
     uploadObj.abort()
     rStream.push(null)
     return res.status(400).send({ status: 'aborted' })
@@ -98,7 +102,7 @@ const uploadFileHandler = async (req, res, next) => {
 
   // error in request
   req.on('error', e => {
-    // delete whatever you are piping to s3
+    // abort piping to s3 and end stream
     uploadObj.abort()
     rStream.push(null)
     return next(e)
@@ -108,8 +112,14 @@ const uploadFileHandler = async (req, res, next) => {
   req.on('end', async e => {
     let uploadPendingList = user.uploadPendingList || []
     uploadPendingList.push(docid)
-    uploadObj.promise().then(r => console.log(r))
+    // end the stream
     rStream.push(null)
+    // wait for upload to s3 to finish
+    await uploadObj.promise().catch(() => {
+      return res
+        .status(501)
+        .send({ status: 'failed', error: 'Failed to upload file' })
+    })
     await dbmethods.addRecordInTable(TableNames.DOCUMENTS, {
       size: fileSize,
       docid,
@@ -126,7 +136,7 @@ const uploadFileHandler = async (req, res, next) => {
   res.on('finish', () => {
     // req timed out
     if (res.statusCode === 408) {
-      // delete whatever you piped to s3
+      // abort piping to s3 and end stream
       uploadObj.abort()
       rStream.push(null)
     }
