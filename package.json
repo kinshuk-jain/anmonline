@@ -11,7 +11,7 @@
     "setup": "npm run setup:db && npm run setup:s3",
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "db": "docker run -p 8000:8000 amazon/dynamodb-local",
+    "db": "docker-compose up",
     "prettier": "npx prettier --write '**/*.js'"
   },
   "author": "kinshuk.jain",
