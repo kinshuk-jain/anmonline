@@ -1,9 +1,8 @@
-require('dotenv').config()
+require('dotenv').config({ path: `./config/${process.env.NODE_ENV}/.env` })
 const path = require('path')
 
 // set project root path
 global.rootPath = path.join(__filename, '../')
-
 const express = require('express')
 const helmet = require('helmet')
 const cors = require('cors')
@@ -115,6 +114,10 @@ process.on('SIGINT', () => {
   process.exit(0)
 })
 
-app.listen(process.env.PORT, () => {
-  console.log(`started at port: ${process.env.PORT}`)
-})
+if (process.env.NODE_ENV === 'development') {
+  app.listen(process.env.PORT, () => {
+    console.log(`started at port: ${process.env.PORT}`)
+  })
+}
+
+module.exports = app

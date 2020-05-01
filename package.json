@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "cp ./config/production/.env . && serverless deploy",
+    "deploy": "./scripts/deploy.sh",
     "setup:db": "node -r dotenv/config ./src/modules/db/create-tables.js dotenv_config_path=./.env",
     "setup:s3": "node -r dotenv/config ./src/modules/s3/create-bucket.js dotenv_config_path=./.env",
     "setup": "npm run setup:db && npm run setup:s3",
-    "start": "node app.js",
+    "start": "NODE_ENV=development node app.js",
     "dev": "nodemon app.js",
     "db": "docker-compose up",
     "prettier": "npx prettier --write '**/*.js'"
@@ -20,6 +20,7 @@
     "@sendgrid/mail": "^6.5.0",
     "ajv": "^6.11.0",
     "aws-sdk": "^2.605.0",
+    "aws-serverless-express": "^3.3.8",
     "axios": "^0.19.1",
     "bcrypt": "^3.0.7",
     "body-parser": "^1.19.0",
