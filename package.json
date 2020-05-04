@@ -6,11 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "./scripts/deploy.sh",
-    "setup:db": "node -r dotenv/config ./src/modules/db/create-tables.js dotenv_config_path=./.env",
-    "setup:s3": "node -r dotenv/config ./src/modules/s3/create-bucket.js dotenv_config_path=./.env",
+    "setup:db": "node -r dotenv/config ./src/modules/db/create-tables.js dotenv_config_path=./config/development/.env",
+    "setup:s3": "node -r dotenv/config ./src/modules/s3/create-bucket.js dotenv_config_path=./config/development/.env",
     "setup": "npm run setup:db && npm run setup:s3",
     "start": "NODE_ENV=development node app.js",
-    "dev": "nodemon app.js",
+    "dev": "NODE_ENV=development nodemon app.js",
     "db": "docker-compose up",
     "prettier": "npx prettier --write '**/*.js'"
   },

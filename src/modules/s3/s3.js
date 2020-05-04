@@ -16,14 +16,14 @@ AWS.config.update({
 
 const S3 = new AWS.S3({ apiVersion: '2006-03-01' })
 
-function s3Upload(docid, data, Metadata) {
+function s3Upload(docid, dataStream, Metadata) {
   return S3.upload(
     {
       Bucket: process.env.BUCKET_NAME,
       Tagging: S3_TAG,
       // setting this causes small file uploads to hang sometimes i.e. less than 50KB
       // ContentLength: Metadata.size,
-      Body: data,
+      Body: dataStream,
       Key: `${docid}`, // improving key names makes retrieval harder, for now going with this only
       ServerSideEncryption: ENC_ALGORITHM,
       Metadata,

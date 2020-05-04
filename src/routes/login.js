@@ -4,6 +4,7 @@ const {
   createSessionToken,
 } = require('../modules/auth')
 const axios = require('axios')
+const qs = require('querystring')
 
 const { REFRESH_TOKEN_EXPIRY_TIMEOUT } = require('../constants/timers')
 const ROUTES = require('../constants/routes')
@@ -15,7 +16,6 @@ const loginHandler = async (req, res) => {
 
   username = sanitize(username)
   password = sanitize(password)
-  captcha = sanitize(captcha)
 
   const respondWith401 = msg => {
     res.body = {
@@ -35,10 +35,18 @@ const loginHandler = async (req, res) => {
     }
 
     // validate captcha
-    const { data } = await axios.post(process.env.CAPTCHA_ENDPOINT, {
-      response: captcha,
-      secret: process.env.CAPTCHA_SECRET,
-    })
+    const { data } = await axios.post(
+      process.env.CAPTCHA_ENDPOINT,
+      qs.stringify({
+        response: captcha,
+        secret: process.env.CAPTCHA_SECRET,
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    )
 
     if (!data.success && process.env.NODE_ENV !== 'development') {
       return respondWith401('Captcha validation failed')
