@@ -13,8 +13,11 @@ docker cp docustore:/usr/src/app/docustore.zip .
 # remove the container
 docker rm -f docustore
 
-# upload zip file to lambda function
-aws lambda update-function-code --function-name docustore --region ap-south-1 --zip-file fileb://${PWD}/docustore.zip
+# LEGACY - not using lambda anymore
+# aws lambda update-function-code --function-name docustore --region ap-south-1 --zip-file fileb://${PWD}/docustore.zip
+
+# upload zip file to s3
+aws s3 cp docustore.zip s3://kinarva/
 
 # remove zip file
 rm docustore.zip

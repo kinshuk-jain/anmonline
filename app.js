@@ -114,10 +114,8 @@ process.on('SIGINT', () => {
   process.exit(0)
 })
 
-if (process.env.NODE_ENV === 'development') {
-  app.listen(process.env.PORT, () => {
-    console.log(`started at port: ${process.env.PORT}`)
-  })
-}
+app.listen(process.env.PORT, () => {
+  console.log(`started at port: ${process.env.PORT}`)
+})
 
-module.exports = app
+// module.exports = app
