@@ -25,6 +25,7 @@ const loadUserHandler = async (req, res) => {
       delete doc['createdFor']
       delete doc['mimeType']
       delete doc['s3Reference']
+      delete doc['timesAccessed']
       // if user is admin or is user who uploaded it, allow deletion of doc
       if (userid === doc.uploadedBy.userid || role === USER_ROLES.ADMIN) {
         doc.deleteAllowed = true

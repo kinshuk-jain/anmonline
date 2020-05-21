@@ -65,7 +65,7 @@ const refreshTokenTableParams = {
     - uploadedBy (userid and name)
     - dateCreated
     - lastAccessedOn (means time)
-    - lastAccessedBy (userid)
+    - lastAccessedBy (name)
     - timesAccessed
     - s3Reference
     - metadata

@@ -43,6 +43,12 @@ const downloadFileHandler = async (req, res) => {
     return res.status(404).send({ error: 'Document does not exist' })
   }
 
+  await DBMethods.updateRecordInDocTable(docid, {
+    lastAccessedOn: Date.now().toString(),
+    lastAccessedBy: user.name,
+    timesAccessed: +doc.timesAccessed + 1,
+  })
+
   res.setHeader('Content-Type', doc.mimeType)
   res.setHeader('Content-Disposition', contentDisposition(doc.docName))
 
