@@ -48,9 +48,9 @@ const refreshTokenTableParams = {
   ProvisionedThroughput: {
     /* required */
     // number of strongly consistent reads per second or double eventually consistent reads
-    ReadCapacityUnits: 10,
+    ReadCapacityUnits: 5,
     // data in KBs to be written per second. Setting it to 10KB
-    WriteCapacityUnits: 10,
+    WriteCapacityUnits: 5,
   },
 }
 
@@ -80,7 +80,7 @@ const documentsTableParams = {
   ProvisionedThroughput: {
     /* required */
     // number of strongly consistent reads per second or double eventually consistent reads
-    ReadCapacityUnits: 10,
+    ReadCapacityUnits: 5,
     // data in KBs to be written per second. Setting it to 10KB
     WriteCapacityUnits: 10,
   },
