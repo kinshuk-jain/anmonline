@@ -23,11 +23,9 @@ function updatePassword(userid, password) {
     })
 }
 
-async function verifyPassword(userid, userEnteredPassword) {
-  const { password } = (await DBMethods.getUser(userid)) || {}
-
+async function verifyPassword(storedPassword, userEnteredPassword) {
   return bcrypt
-    .compare(userEnteredPassword, password)
+    .compare(userEnteredPassword, storedPassword)
     .then(result => result)
     .catch(err => {
       console.error({

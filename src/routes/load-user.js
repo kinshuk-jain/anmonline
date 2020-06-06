@@ -4,7 +4,7 @@ const { USER_ROLES, PAGINATION_LIMIT } = require('../constants/general')
 
 // NOTE: For now one admin can fetch/delete data of other admins
 
-// TODO: add support for filters
+// TODO: add support for filters, change admin username
 const loadUserHandler = async (req, res) => {
   const { role, userid, docsList = [] } =
     (await DBMethods.getUser(req.userid)) || {}
@@ -40,7 +40,7 @@ const loadUserHandler = async (req, res) => {
     const results = await getAllDocs(
       docsList.slice(start, start + PAGINATION_LIMIT)
     )
-    return res.status(200).send({ results })
+    return res.status(200).send({ results, role, ...(role === USER_ROLES.OWNER ? { prefillUser: { name: 'anm and associates', username: 'anm' } } : null) })
   }
 
   if (role === USER_ROLES.ADMIN) {
@@ -48,7 +48,7 @@ const loadUserHandler = async (req, res) => {
     const results = await getAllDocs(
       (user.docsList || []).slice(start, start + PAGINATION_LIMIT)
     )
-    return res.status(200).send({ results })
+    return res.status(200).send({ results, role })
   }
 
   return res.status(403).send({ error: 'Not Authorized' })

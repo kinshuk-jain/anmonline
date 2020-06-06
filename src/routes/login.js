@@ -51,8 +51,8 @@ const loginHandler = async (req, res) => {
     if (!data.success && process.env.NODE_ENV !== 'development') {
       return respondWith401('Captcha validation failed')
     }
-
-    const isPasswordValid = await verifyPassword(username, password)
+    const user = (await DBMethods.getUser(username)) || {}
+    const isPasswordValid = await verifyPassword(user.password, password)
     if (!isPasswordValid) {
       return respondWith401('Invalid username or password')
     }
@@ -61,6 +61,7 @@ const loginHandler = async (req, res) => {
 
     res.body = {
       token: sessionToken,
+      role: user.role
     }
 
     return res
