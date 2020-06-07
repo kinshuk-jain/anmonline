@@ -49,8 +49,7 @@ const createUserHandler = async (req, res) => {
       templateId: process.env.EMAIL_TEMPLATE_ID,
       dynamic_template_data: {
         username: userid,
-        password,
-        loginPage: `${process.env.HOSTED_DOMAIN}/login`,
+        password
       },
     }
 
