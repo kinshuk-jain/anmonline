@@ -61,7 +61,7 @@ const loginHandler = async (req, res) => {
 
     res.body = {
       token: sessionToken,
-      role: user.role
+      role: user.role,
     }
 
     return res

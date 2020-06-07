@@ -40,7 +40,13 @@ const loadUserHandler = async (req, res) => {
     const results = await getAllDocs(
       docsList.slice(start, start + PAGINATION_LIMIT)
     )
-    return res.status(200).send({ results, role, ...(role === USER_ROLES.OWNER ? { prefillUser: { name: 'anm and associates', username: 'anm' } } : null) })
+    return res.status(200).send({
+      results,
+      role,
+      ...(role === USER_ROLES.OWNER
+        ? { prefillUser: { name: 'anm and associates', username: 'anm' } }
+        : null),
+    })
   }
 
   if (role === USER_ROLES.ADMIN) {

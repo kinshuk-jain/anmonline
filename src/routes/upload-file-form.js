@@ -50,7 +50,7 @@ const uploadFileFormHandler = async (req, res) => {
       metadata: {
         year,
       },
-      timesAccessed: 0
+      timesAccessed: 0,
     })
   })
 
