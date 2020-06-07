@@ -11,7 +11,8 @@ Follow the following steps to deploy code
 - give ssh permission to ec2 by adding security group
 - ssh into ec2
 - execute run-server script
-- Thats it
+- run `pm2 list` to confirm server is running
+- thats it
 
 ### Setting up server
 
