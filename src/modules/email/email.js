@@ -1,16 +1,14 @@
-const AWS = require('aws-sdk')
+const AWS_SES = require('aws-sdk/clients/ses')
 
-AWS.config.update({
-  region: 'ap-south-1' || process.env.AWS_REGION,
+const SES = new AWS_SES({
+  apiVersion: '2010-12-01',
   ...(process.env.NODE_ENV !== 'production'
-    ? {
-        accessKeyId: 'akid',
-        secretAccessKey: 'secret',
-      }
-    : {}),
+  ? {
+      accessKeyId: 'akid',
+      secretAccessKey: 'secret',
+    }
+  : {})
 })
-
-const SES = new AWS.SES()
 
 function sendEmail({
   from = 'no-reply@kinarva.com',

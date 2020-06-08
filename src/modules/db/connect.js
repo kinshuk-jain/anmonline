@@ -1,6 +1,8 @@
-const AWS = require('aws-sdk')
+const AWS_DYNAMODB = require('aws-sdk/clients/dynamodb')
 
-AWS.config.update({
+const dynamodb = new AWS_DYNAMODB({
+  sslEnabled: true,
+  apiVersion: '2012-08-10',
   region: process.env.AWS_REGION,
   endpoint: process.env.AWS_DB_ENDPOINT,
   ...(process.env.NODE_ENV !== 'production'
@@ -11,12 +13,7 @@ AWS.config.update({
     : {}),
 })
 
-const dynamodb = new AWS.DynamoDB({
-  sslEnabled: true,
-  apiVersion: '2012-08-10',
-})
-
-const docClient = new AWS.DynamoDB.DocumentClient({
+const docClient = new AWS_DYNAMODB.DocumentClient({
   service: dynamodb,
 })
 

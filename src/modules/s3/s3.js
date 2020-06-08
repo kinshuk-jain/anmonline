@@ -1,20 +1,19 @@
 const ENC_ALGORITHM = 'AES256'
 const S3_TAG = 'service=Kinarva'
-const AWS = require('aws-sdk')
+const AWS_S3 = require('aws-sdk/clients/s3')
 
-AWS.config.update({
+const S3 = new AWS_S3({
+  apiVersion: '2006-03-01',
   region: process.env.AWS_REGION,
   endpoint: process.env.AWS_S3_ENDPOINT,
   ...(process.env.NODE_ENV !== 'production'
-    ? {
-        accessKeyId: 'akid',
-        secretAccessKey: 'secret',
-        s3ForcePathStyle: true,
-      }
-    : {}),
+  ? {
+      accessKeyId: 'akid',
+      secretAccessKey: 'secret',
+      s3ForcePathStyle: true,
+    }
+  : {})
 })
-
-const S3 = new AWS.S3({ apiVersion: '2006-03-01' })
 
 function s3Upload(docid, dataStream, Metadata) {
   return S3.upload(
