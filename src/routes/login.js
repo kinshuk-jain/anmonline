@@ -3,6 +3,7 @@ const {
   createRefreshToken,
   createSessionToken,
 } = require('../modules/auth')
+const { DBMethods } = require('../modules/db')
 const axios = require('axios')
 const qs = require('querystring')
 
