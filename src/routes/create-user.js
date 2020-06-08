@@ -1,11 +1,8 @@
-const sgMail = require('@sendgrid/mail')
-
 const { DBMethods, TableNames } = require('../modules/db')
 const { generatePassword } = require('../modules/auth')
+const { sendLoginCredsEmail } = require('../modules/email')
 const { sanitize } = require('../utils')
 const { NO_REPLY_EMAIL, USER_ROLES } = require('../constants/general')
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 // Future work: add email address verification before sending emails
 
@@ -43,17 +40,10 @@ const createUserHandler = async (req, res) => {
       docsAccessedTimes: {},
     })
 
-    const emailOptions = {
-      to: [email, adminUser.email],
-      from: NO_REPLY_EMAIL,
-      templateId: process.env.EMAIL_TEMPLATE_ID,
-      dynamic_template_data: {
-        username: userid,
-        password,
-      },
-    }
+    // send email with credentials
+    // TODO: add adminUser.email once out of sandbox
+    sendLoginCredsEmail([email], userid, password)
 
-    sgMail.send(emailOptions)
     res.body = {
       message: 'User successfully created',
     }

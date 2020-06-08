@@ -55,8 +55,8 @@ function sendEmail({
 
 function sendLoginCredsEmail(
   recipient = ['kinshuk2jain@gmail.com'],
-  username = 'abcd',
-  password = 'blah'
+  username,
+  password
 ) {
   if (!Array.isArray(recipient)) {
     throw 'recipient must be an array of recipients'
