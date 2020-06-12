@@ -17,7 +17,7 @@ docker rm -f docustore
 # aws lambda update-function-code --function-name docustore --region ap-south-1 --zip-file fileb://${PWD}/docustore.zip
 
 # upload zip file to s3
-aws s3 cp docustore.zip s3://kinarva/
+aws s3 cp docustore.zip s3://kinarva/ --storage-class ONEZONE_IA
 
 # remove zip file
 rm docustore.zip

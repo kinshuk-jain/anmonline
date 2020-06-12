@@ -19,6 +19,7 @@ Follow the following steps to deploy code
 - It is an ec2 t2.micro
 - It is running nginx forwarding port 80 to 3000
 - It uses pm2 to manage the node server
+- It uses pm2-logrotate to manage logs
 - Run command to install dependencies:
 
 ```
@@ -31,7 +32,7 @@ RUN yum install -y make gcc-c++ tar xz gzip
 ```
 server {
   listen 80;
-  server_name tutorial;
+  server_name api.kinarva.com;
   location / {
     proxy_set_header  X-Real-IP  $remote_addr;
     proxy_set_header  Host       $http_host;
@@ -62,33 +63,9 @@ npm install pm2 -g
 
 Setup a pm2 ecosystem file with NODE_ENV set for production
 
-- Configure ssl with nginx. Need to get a trusted CA as self-signed certificates generate warning on browsers
+- Setup SSL with nginx. The project uses Let's Encrypt to obtain SSL certificate. Their certificates are valid
+for only 90 days and must be renewed after that. There is a cron job running to renew certificates automatically.
+To see how to setup SSL with Let's encrypt and how to setup the cron job, see the [tutorial](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html#letsencrypt)
 
-```
-sudo mkdir /etc/ssl/private
-sudo chmod 700 /etc/ssl/private
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
-```
-
-When prompted for common name, enter the domain name for the certificate. Then run:
-
-```
-sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
-```
-
-Next add this to nginx configureation. For more details, [click here](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-on-centos-7)
-
-```
-server {
-    listen 443 http2 ssl;
-    listen [::]:443 http2 ssl;
-
-    server_name server_IP_address;
-
-    ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
-    ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
-    ssl_dhparam /etc/ssl/certs/dhparam.pem;
-}
-```
 
 - start node server by executing the run-server script

@@ -26,6 +26,7 @@ function s3Upload(docid, dataStream, Metadata) {
       Key: `${docid}`, // improving key names makes retrieval harder, for now going with this only
       ServerSideEncryption: ENC_ALGORITHM,
       Metadata,
+      StorageClass: 'ONEZONE_IA'
     },
     err => {
       if (err) console.error('Upload to S3 failed: ' + docid)
