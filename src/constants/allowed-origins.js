@@ -1,1 +1,1 @@
-module.exports = [/kinarva\.com$/, /sharedocs\.in$/]
+module.exports = [/kinarva\.com$/, /api\.kinarva\.com$/]

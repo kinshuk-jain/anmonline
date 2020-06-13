@@ -4,11 +4,11 @@ const dynamodb = new AWS_DYNAMODB({
   sslEnabled: true,
   apiVersion: '2012-08-10',
   region: process.env.AWS_REGION,
-  endpoint: process.env.AWS_DB_ENDPOINT,
   ...(process.env.NODE_ENV !== 'production'
     ? {
         accessKeyId: 'akid',
         secretAccessKey: 'secret',
+        endpoint: process.env.AWS_DB_ENDPOINT,
       }
     : {}),
 })

@@ -1,3 +1,4 @@
+// Only used locally for creating bucket
 const { exec } = require('child_process')
 const { S3 } = require('./index')
 

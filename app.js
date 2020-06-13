@@ -24,7 +24,7 @@ const corsOptions = {
       ? allowedOrigins
       : process.env.HOSTED_DOMAIN,
   credentials: true,
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  methods: 'GET,HEAD,PUT,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
   exposedHeaders: [
@@ -46,7 +46,7 @@ app.use((req, res, next) => {
   next()
 })
 
-// cors
+// enable cors for all routes
 app.use(cors(corsOptions))
 
 // timeout requests
@@ -68,7 +68,7 @@ app.use([
 
 app.use(logger)
 
-// enable pre-flight
+// enable cors pre-flight for all routes
 app.options('*', cors(corsOptions))
 
 // add routes

@@ -5,14 +5,14 @@ const AWS_S3 = require('aws-sdk/clients/s3')
 const S3 = new AWS_S3({
   apiVersion: '2006-03-01',
   region: process.env.AWS_REGION,
-  endpoint: process.env.AWS_S3_ENDPOINT,
   ...(process.env.NODE_ENV !== 'production'
-  ? {
-      accessKeyId: 'akid',
-      secretAccessKey: 'secret',
-      s3ForcePathStyle: true,
-    }
-  : {})
+    ? {
+        accessKeyId: 'akid',
+        secretAccessKey: 'secret',
+        s3ForcePathStyle: true,
+        endpoint: process.env.AWS_S3_ENDPOINT,
+      }
+    : {}),
 })
 
 function s3Upload(docid, dataStream, Metadata) {
@@ -26,7 +26,7 @@ function s3Upload(docid, dataStream, Metadata) {
       Key: `${docid}`, // improving key names makes retrieval harder, for now going with this only
       ServerSideEncryption: ENC_ALGORITHM,
       Metadata,
-      StorageClass: 'ONEZONE_IA'
+      StorageClass: 'ONEZONE_IA',
     },
     err => {
       if (err) console.error('Upload to S3 failed: ' + docid)

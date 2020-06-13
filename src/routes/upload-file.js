@@ -115,11 +115,14 @@ const uploadFileHandler = async (req, res, next) => {
     // end the stream
     rStream.push(null)
     // wait for upload to s3 to finish
-    await uploadObj.promise().catch(() => {
+    try {
+      await uploadObj.promise()
+    } catch (e) {
       return res
         .status(501)
         .send({ status: 'failed', error: 'Failed to upload file' })
-    })
+    }
+
     await dbmethods.addRecordInTable(TableNames.DOCUMENTS, {
       size: fileSize,
       docid,

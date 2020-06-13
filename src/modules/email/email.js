@@ -3,11 +3,11 @@ const AWS_SES = require('aws-sdk/clients/ses')
 const SES = new AWS_SES({
   apiVersion: '2010-12-01',
   ...(process.env.NODE_ENV !== 'production'
-  ? {
-      accessKeyId: 'akid',
-      secretAccessKey: 'secret',
-    }
-  : {})
+    ? {
+        accessKeyId: 'akid',
+        secretAccessKey: 'secret',
+      }
+    : {}),
 })
 
 function sendEmail({
