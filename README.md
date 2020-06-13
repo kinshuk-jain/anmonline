@@ -48,6 +48,9 @@ access_log off
 error_log /dev/null
 ```
 
+- Increase `client_body_buffer_size` size to allow file uploads upto 25mb. Default value for this is 1mb.
+Any uploads greater than this value will be blocked by nginx
+
 - Install node
 
 ```
@@ -69,3 +72,8 @@ To see how to setup SSL with Let's encrypt and how to setup the cron job, see th
 
 
 - start node server by executing the run-server script
+
+### Usage guidelines
+
+- Do not have same name for two companies. It makes uploading files for them harder
+- Always select a company name from results shown in name search fields. Only typing the name without selection will not work
