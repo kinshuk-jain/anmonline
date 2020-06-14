@@ -79,6 +79,27 @@ const uploadFileHandler = async (req, res, next) => {
         date: [d.getFullYear(), `${d.getMonth() + 1}`, `${d.getDate()}`].join(
           '-'
         ),
+      }, (err, data) => {
+        if (err) {
+          console.error(err)
+          return res
+            .status(501)
+            .send({ status: 'failed', error: 'Failed to upload file' })
+        } else {
+          dbmethods.addRecordInTable(TableNames.DOCUMENTS, {
+            size: fileSize,
+            docid,
+            docName: filename,
+            mimeType: fileType,
+            uploadedBy: user.userid,
+            dateCreated: Date.now().toString(),
+            // s3Reference
+          })
+          let uploadPendingList = user.uploadPendingList || []
+          uploadPendingList.push(docid)
+          dbmethods.updateRecordInUserTable(user.userid, { uploadPendingList })
+          return res.status(200).send({ status: 'success' })
+        }
       })
     }
 
@@ -110,30 +131,8 @@ const uploadFileHandler = async (req, res, next) => {
 
   // client finished sending data
   req.on('end', async e => {
-    let uploadPendingList = user.uploadPendingList || []
-    uploadPendingList.push(docid)
     // end the stream
     rStream.push(null)
-    // wait for upload to s3 to finish
-    try {
-      await uploadObj.promise()
-    } catch (e) {
-      return res
-        .status(501)
-        .send({ status: 'failed', error: 'Failed to upload file' })
-    }
-
-    await dbmethods.addRecordInTable(TableNames.DOCUMENTS, {
-      size: fileSize,
-      docid,
-      docName: filename,
-      mimeType: fileType,
-      uploadedBy: user.userid,
-      dateCreated: Date.now().toString(),
-      // s3Reference
-    })
-    await dbmethods.updateRecordInUserTable(user.userid, { uploadPendingList })
-    return res.status(200).send({ status: 'success' })
   })
 
   res.on('finish', () => {

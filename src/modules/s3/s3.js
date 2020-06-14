@@ -15,7 +15,7 @@ const S3 = new AWS_S3({
     : {}),
 })
 
-function s3Upload(docid, dataStream, Metadata) {
+function s3Upload(docid, dataStream, Metadata = {}, callback = () => {}) {
   return S3.upload(
     {
       Bucket: process.env.BUCKET_NAME,
@@ -28,9 +28,7 @@ function s3Upload(docid, dataStream, Metadata) {
       Metadata,
       StorageClass: 'ONEZONE_IA',
     },
-    err => {
-      if (err) console.error('Upload to S3 failed: ' + docid)
-    }
+    callback
   )
 }
 
