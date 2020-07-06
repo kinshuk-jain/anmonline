@@ -70,10 +70,10 @@ const uploadFileHandler = async (req, res, next) => {
 
       // remove headers
       data = data.slice(index + EOL.length)
+
       // start uploading to s3
       const d = new Date()
       uploadObj = s3Upload(docid, rStream, {
-        name: filename,
         type: fileType,
         size: fileSize,
         date: [d.getFullYear(), `${d.getMonth() + 1}`, `${d.getDate()}`].join(

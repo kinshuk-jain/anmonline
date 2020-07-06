@@ -31,7 +31,7 @@ const createUserHandler = async (req, res) => {
 
     await DBMethods.addRecordInTable(TableNames.USER, {
       name,
-      role: userRole,
+      role: 'user', // hardcoding user for now, should be userRole
       password: hash,
       email,
       userid,
