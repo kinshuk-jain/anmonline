@@ -8,6 +8,7 @@ const LOAD_USER = '/load-user'
 const UPLOAD_FILE = '/upload-file'
 const UPLOAD_FILE_FORM = '/upload-file/submit'
 const DOWNLOAD_FILE = '/download'
+const DELETE_FILE = '/delete'
 
 module.exports = {
   SERVICE_METADATA,
@@ -20,4 +21,5 @@ module.exports = {
   UPLOAD_FILE,
   UPLOAD_FILE_FORM,
   DOWNLOAD_FILE,
+  DELETE_FILE,
 }

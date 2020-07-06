@@ -73,34 +73,41 @@ const uploadFileHandler = async (req, res, next) => {
 
       // start uploading to s3
       const d = new Date()
-      uploadObj = s3Upload(docid, rStream, {
-        type: fileType,
-        size: fileSize,
-        date: [d.getFullYear(), `${d.getMonth() + 1}`, `${d.getDate()}`].join(
-          '-'
-        ),
-      }, (err, data) => {
-        if (err) {
-          console.error(err)
-          return res
-            .status(501)
-            .send({ status: 'failed', error: 'Failed to upload file' })
-        } else {
-          dbmethods.addRecordInTable(TableNames.DOCUMENTS, {
-            size: fileSize,
-            docid,
-            docName: filename,
-            mimeType: fileType,
-            uploadedBy: user.userid,
-            dateCreated: Date.now().toString(),
-            // s3Reference
-          })
-          let uploadPendingList = user.uploadPendingList || []
-          uploadPendingList.push(docid)
-          dbmethods.updateRecordInUserTable(user.userid, { uploadPendingList })
-          return res.status(200).send({ status: 'success' })
+      uploadObj = s3Upload(
+        docid,
+        rStream,
+        {
+          type: fileType,
+          size: fileSize,
+          date: [d.getFullYear(), `${d.getMonth() + 1}`, `${d.getDate()}`].join(
+            '-'
+          ),
+        },
+        (err, data) => {
+          if (err) {
+            console.error(err)
+            return res
+              .status(501)
+              .send({ status: 'failed', error: 'Failed to upload file' })
+          } else {
+            dbmethods.addRecordInTable(TableNames.DOCUMENTS, {
+              size: fileSize,
+              docid,
+              docName: filename,
+              mimeType: fileType,
+              uploadedBy: user.userid,
+              dateCreated: Date.now().toString(),
+              // s3Reference
+            })
+            let uploadPendingList = user.uploadPendingList || []
+            uploadPendingList.push(docid)
+            dbmethods.updateRecordInUserTable(user.userid, {
+              uploadPendingList,
+            })
+            return res.status(200).send({ status: 'success' })
+          }
         }
-      })
+      )
     }
 
     let ind = data.indexOf(boundary)

@@ -21,6 +21,7 @@ const loadUserHandler = require('./load-user')
 const uploadFileHandler = require('./upload-file')
 const uploadFileFormHandler = require('./upload-file-form')
 const downloadFileHandler = require('./download-file')
+const deleteFileHandler = require('./delete-file')
 
 // routes that do not require an access token or csrf protection
 router.get(ROUTES.SERVICE_METADATA, serviceMetadataHandler)
@@ -37,7 +38,7 @@ router.post(ROUTES.LOGIN, validateXRequestedWith, loginHandler)
 router.post(
   ROUTES.LOGOUT,
   validateXRequestedWith,
-  validateAuthToken, // TODO: we should not need token validation for logout
+  validateAuthToken,
   logoutHandler
 )
 
@@ -53,6 +54,13 @@ router.get(
   validateXRequestedWith,
   validateAuthToken,
   downloadFileHandler
+)
+
+router.delete(
+  ROUTES.DELETE_FILE,
+  validateXRequestedWith,
+  validateAuthToken,
+  deleteFileHandler
 )
 
 // with body validation
