@@ -41,8 +41,7 @@ const createUserHandler = async (req, res) => {
     })
 
     // send email with credentials
-    // TODO: add adminUser.email once out of sandbox
-    sendLoginCredsEmail([email], userid, password)
+    sendLoginCredsEmail([email, adminUser.email], userid, password)
 
     res.body = {
       message: 'User successfully created',

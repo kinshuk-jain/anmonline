@@ -1,6 +1,6 @@
 const NO_REPLY_EMAIL = 'no-reply@kinarva.com'
 
-const PAGINATION_LIMIT = 50
+const PAGINATION_LIMIT = 500
 
 const DISALLOWED_MIME_TYPES = [
   'application/octet-stream',
