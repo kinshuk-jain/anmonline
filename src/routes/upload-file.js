@@ -1,6 +1,7 @@
 const uuidv4 = require('uuid/v4')
 const Stream = require('stream')
 const dbmethods = require('../modules/db/db-methods')
+const cache = require('../utils/cache')
 const { TableNames } = require('../modules/db/db-config')
 const { USER_ROLES, DISALLOWED_MIME_TYPES } = require('../constants/general')
 const { s3Upload } = require('../modules/s3')
@@ -99,11 +100,8 @@ const uploadFileHandler = async (req, res, next) => {
               dateCreated: Date.now().toString(),
               // s3Reference
             })
-            let uploadPendingList = user.uploadPendingList || []
-            uploadPendingList.push(docid)
-            dbmethods.updateRecordInUserTable(user.userid, {
-              uploadPendingList,
-            })
+            // update uploadPendingList
+            cache.appendAtKey(user.userid, docid)
             return res.status(200).send({ status: 'success' })
           }
         }

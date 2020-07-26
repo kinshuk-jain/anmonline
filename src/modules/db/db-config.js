@@ -15,7 +15,6 @@ const TableNames = {
     - docsList: can contain duplicate values
     - numOfDocsUploaded
     - docsAccessedTimes
-    - uploadPendingList
   */
 const userTableParams = {
   TableName: TableNames.USER /* required */,

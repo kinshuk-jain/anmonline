@@ -1,5 +1,6 @@
 const dbmethods = require('../modules/db/db-methods')
 const { USER_ROLES } = require('../constants/general')
+const cache = require('../utils/cache')
 const { s3Delete } = require('../modules/s3')
 
 const uploadFileFormHandler = async (req, res) => {
@@ -33,7 +34,7 @@ const uploadFileFormHandler = async (req, res) => {
     })
   }
 
-  const pendingList = user.uploadPendingList || []
+  const pendingList = cache.get(user.userid) || []
 
   if (!pendingList.length) {
     return res.status(400).send({ status: 'failed', error: 'No file uploaded' })
@@ -56,10 +57,9 @@ const uploadFileFormHandler = async (req, res) => {
 
   await dbmethods.updateRecordInUserTable(user.userid, {
     numOfDocsUploaded:
-      (user.numOfDocsUploaded ? 0 : +user.numOfDocsUploaded) +
+      (user.numOfDocsUploaded ? +user.numOfDocsUploaded : 0) +
       numOfFilesUploaded +
       '',
-    uploadPendingList: [],
   })
 
   await dbmethods.updateRecordInUserTable(uploadedForUser.userid, {
@@ -75,7 +75,9 @@ const uploadFileFormHandler = async (req, res) => {
       await dbmethods.deleteRecordFromDocTable(docid)
     })
 
-  res.status(200).send({ status: 'success' })
+  cache.put(user.userid, [])
+
+  return res.status(200).send({ status: 'success' })
 }
 
 module.exports = uploadFileFormHandler

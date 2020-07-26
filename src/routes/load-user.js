@@ -21,6 +21,7 @@ const loadUserHandler = async (req, res) => {
 
     for (let docid of list) {
       const doc = await DBMethods.getDocument(docid)
+      if (!doc || !doc.uploadedBy) continue
       doc.createdBy = doc.uploadedBy.name
       delete doc['createdFor']
       delete doc['mimeType']
