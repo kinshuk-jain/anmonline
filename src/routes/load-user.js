@@ -4,7 +4,7 @@ const { USER_ROLES, PAGINATION_LIMIT } = require('../constants/general')
 
 // NOTE: For now one admin can fetch/delete data of other admins
 
-// TODO: add support for filters, change admin username
+// TODO: change admin username
 const loadUserHandler = async (req, res) => {
   const { role, userid, docsList = [] } =
     (await DBMethods.getUser(req.userid)) || {}

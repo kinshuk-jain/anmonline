@@ -8,7 +8,7 @@ const uploadFileFormHandler = async (req, res) => {
   if (user.role !== USER_ROLES.ADMIN && user.role !== USER_ROLES.OWNER) {
     return res.status(401).send({ status: 'failed', error: 'Not allowed' })
   }
-  const { username, year, docType, numOfFilesUploaded } = req.body
+  const { username, year, docType, numOfFilesUploaded, subType } = req.body
 
   const uploadedForUser = (await dbmethods.getUser(username)) || {}
   if (uploadedForUser.userid !== username || username === 'admin') {
@@ -43,6 +43,7 @@ const uploadFileFormHandler = async (req, res) => {
   pendingList.slice(-numOfFilesUploaded).forEach(async docid => {
     await dbmethods.updateRecordInDocTable(docid, {
       docType,
+      subType,
       createdFor: {
         name: uploadedForUser.name,
         userid: uploadedForUser.userid,

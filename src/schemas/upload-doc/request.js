@@ -1,13 +1,17 @@
 module.exports = {
   $id: 'upload-doc',
   type: 'object',
-  required: ['username', 'year', 'docType', 'numOfFilesUploaded'],
+  required: ['username', 'year', 'docType', 'numOfFilesUploaded', 'subType'],
   properties: {
     username: { type: 'string' },
     year: { type: 'string' },
     docType: {
       type: 'string',
-      enum: ['audit-report', 'finance-report', 'gullu-report'],
+      example: 'audit-report',
+    },
+    subType: {
+      type: 'string',
+      example: 'audit-report',
     },
     numOfFilesUploaded: { type: 'number' },
   },
