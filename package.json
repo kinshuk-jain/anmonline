@@ -17,24 +17,24 @@
   "author": "kinshuk.jain",
   "license": "ISC",
   "dependencies": {
-    "ajv": "^6.11.0",
-    "aws-sdk": "^2.605.0",
+    "ajv": "^6.12.3",
+    "aws-sdk": "^2.726.0",
     "aws-serverless-express": "^3.3.8",
-    "axios": "^0.19.1",
-    "bcrypt": "^3.0.7",
+    "axios": "^0.19.2",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
-    "cookie-parser": "^1.4.4",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "generate-password": "^1.4.2",
-    "helmet": "^3.21.2",
+    "generate-password": "^1.5.1",
+    "helmet": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
-    "morgan": "^1.9.1",
-    "uuid": "^3.4.0"
+    "morgan": "^1.10.0",
+    "prettier": "^2.0.5",
+    "uuid": "^8.3.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2",
-    "prettier": "1.19.1"
+    "nodemon": "^2.0.4"
   }
 }

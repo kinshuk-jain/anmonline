@@ -1,4 +1,4 @@
-const uuidv4 = require('uuid/v4')
+const { v4: uuidv4 } = require('uuid')
 const Stream = require('stream')
 const dbmethods = require('../modules/db/db-methods')
 const cache = require('../utils/cache')
