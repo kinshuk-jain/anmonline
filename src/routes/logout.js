@@ -6,7 +6,7 @@ const cache = require('../utils/cache')
 const logoutHandler = async (req, res) => {
   const { userid } = req
   const uploadPendingList = cache.get(userid) || []
-  uploadPendingList.forEach(async docid => {
+  uploadPendingList.forEach(async (docid) => {
     await s3Delete(docid)
     await dbmethods.deleteRecordFromDocTable(docid)
   })

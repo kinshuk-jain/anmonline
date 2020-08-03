@@ -10,11 +10,11 @@ const SALT_ROUNDS = 8
 function updatePassword(userid, password) {
   return bcrypt
     .hash(password, SALT_ROUNDS)
-    .then(async hash => {
+    .then(async (hash) => {
       await DBMethods.updateUserPassword(userid, hash)
       return true
     })
-    .catch(err => {
+    .catch((err) => {
       console.error({
         type: 'error updating password',
         message: err.message,
@@ -26,8 +26,8 @@ function updatePassword(userid, password) {
 async function verifyPassword(storedPassword, userEnteredPassword) {
   return bcrypt
     .compare(userEnteredPassword, storedPassword)
-    .then(result => result)
-    .catch(err => {
+    .then((result) => result)
+    .catch((err) => {
       console.error({
         type: 'error hashing password',
         message: err.message,
@@ -48,8 +48,8 @@ function generatePassword() {
 
   return bcrypt
     .hash(password, SALT_ROUNDS)
-    .then(hash => ({ hash, password }))
-    .catch(err => {
+    .then((hash) => ({ hash, password }))
+    .catch((err) => {
       console.error({
         type: 'error hashing password',
         message: err.message,

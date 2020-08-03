@@ -8,7 +8,7 @@ async function createTables() {
 
   if (listTablesResult && listTablesResult.TableNames) {
     await Promise.all(
-      listTablesResult.TableNames.map(async tableName => {
+      listTablesResult.TableNames.map(async (tableName) => {
         console.log(`* Deleting table ${tableName}`)
         return await dynamodb.deleteTable({ TableName: tableName }).promise()
       })
@@ -43,7 +43,7 @@ createTables()
   .then(() => {
     process.exit(0)
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err)
     process.exit(1)
   })

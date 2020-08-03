@@ -40,7 +40,7 @@ const uploadFileFormHandler = async (req, res) => {
     return res.status(400).send({ status: 'failed', error: 'No file uploaded' })
   }
 
-  pendingList.slice(-numOfFilesUploaded).forEach(async docid => {
+  pendingList.slice(-numOfFilesUploaded).forEach(async (docid) => {
     await dbmethods.updateRecordInDocTable(docid, {
       docType,
       subType,
@@ -71,7 +71,7 @@ const uploadFileFormHandler = async (req, res) => {
 
   pendingList
     .slice(0, pendingList.length - numOfFilesUploaded)
-    .forEach(async docid => {
+    .forEach(async (docid) => {
       await s3Delete(docid)
       await dbmethods.deleteRecordFromDocTable(docid)
     })

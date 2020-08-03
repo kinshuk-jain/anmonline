@@ -38,7 +38,7 @@ function s3Delete(key) {
       Bucket: process.env.BUCKET_NAME,
       Key: key,
     },
-    e => {
+    (e) => {
       if (e) console.error('Deleting from S3 failed: ' + key)
     }
   )

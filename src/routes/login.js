@@ -18,7 +18,7 @@ const loginHandler = async (req, res) => {
   username = sanitize(username)
   password = sanitize(password)
 
-  const respondWith401 = msg => {
+  const respondWith401 = (msg) => {
     res.body = {
       error: msg,
     }

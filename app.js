@@ -92,7 +92,7 @@ app.use((err, req, res, next) => {
   })
 })
 
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   console.error({
     message: err.message,
     stack: err.stack,
@@ -100,7 +100,7 @@ process.on('unhandledRejection', err => {
   })
 })
 
-process.on('uncaughtException', err => {
+process.on('uncaughtException', (err) => {
   console.error({
     message: err.message,
     stack: err.stack,

@@ -8,7 +8,7 @@ function createBucket() {
   exec('export AWS_SECRET_ACCESS_KEY=secret')
   exec(
     `aws --endpoint-url=${process.env.AWS_S3_ENDPOINT} s3 mb s3://${process.env.BUCKET_NAME}`,
-    err => {
+    (err) => {
       if (err) {
         console.error(err)
         process.exit(1)

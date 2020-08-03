@@ -2,7 +2,7 @@ const { DBMethods } = require('../modules/db')
 const { S3 } = require('../modules/s3')
 const { sanitize } = require('../utils')
 
-const contentDisposition = filename => {
+const contentDisposition = (filename) => {
   if (typeof filename !== 'string') {
     // do not have browser open this file
     return `attachment; filename="unknown"`
@@ -57,14 +57,14 @@ const downloadFileHandler = async (req, res) => {
     Key: docid,
   })
     .createReadStream()
-    .on('error', e => {
+    .on('error', (e) => {
       console.error(e)
       return res
         .status(501)
         .end(JSON.stringify({ error: 'Error sending file' }))
     })
     .pipe(res)
-    .on('error', e => {
+    .on('error', (e) => {
       console.error(e)
       return res
         .status(501)

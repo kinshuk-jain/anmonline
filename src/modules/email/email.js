@@ -42,7 +42,7 @@ function sendEmail({
     // ConfigurationSetName: configuration_set
   }
 
-  SES.sendEmail(params, function(err, data) {
+  SES.sendEmail(params, function (err, data) {
     if (err) {
       console.error(err)
     } else {

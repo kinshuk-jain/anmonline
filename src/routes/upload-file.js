@@ -31,7 +31,7 @@ const uploadFileHandler = async (req, res, next) => {
   rStream._read = () => {} // no-op, but required for readable stream
 
   // client sending data
-  req.on('data', data => {
+  req.on('data', (data) => {
     if (!start) {
       start = true
       // read first line: Multipart boundary
@@ -60,7 +60,7 @@ const uploadFileHandler = async (req, res, next) => {
       fileType = fileType ? fileType.trim() : fileType
 
       // if file type is any of the disallowed mimetypes, return error
-      if (DISALLOWED_MIME_TYPES.some(mime => fileType.search(mime) !== -1)) {
+      if (DISALLOWED_MIME_TYPES.some((mime) => fileType.search(mime) !== -1)) {
         return res
           .status(403)
           .send({ status: 'failed', error: 'File type not allowed' })
@@ -119,7 +119,7 @@ const uploadFileHandler = async (req, res, next) => {
   })
 
   // client cancelled request
-  req.on('aborted', e => {
+  req.on('aborted', (e) => {
     // abort piping to s3 and end stream
     uploadObj.abort()
     rStream.push(null)
@@ -127,7 +127,7 @@ const uploadFileHandler = async (req, res, next) => {
   })
 
   // error in request
-  req.on('error', e => {
+  req.on('error', (e) => {
     // abort piping to s3 and end stream
     uploadObj.abort()
     rStream.push(null)
@@ -135,7 +135,7 @@ const uploadFileHandler = async (req, res, next) => {
   })
 
   // client finished sending data
-  req.on('end', async e => {
+  req.on('end', async (e) => {
     // end the stream
     rStream.push(null)
   })

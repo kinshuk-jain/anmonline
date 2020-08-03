@@ -16,7 +16,7 @@ const loadUserHandler = async (req, res) => {
 
   username = sanitize(username)
 
-  const getAllDocs = async list => {
+  const getAllDocs = async (list) => {
     let results = []
 
     for (let docid of list) {

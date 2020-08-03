@@ -26,8 +26,8 @@ function createSessionToken(userid) {
       algorithm: 'RS256',
     }
   )
-    .then(token => token)
-    .catch(err => {
+    .then((token) => token)
+    .catch((err) => {
       console.error({
         type: 'error signing token',
         message: err.message,
@@ -45,8 +45,8 @@ function verifySessionToken(token) {
     issuer: process.env.MY_DOMAIN,
     algorithm: 'RS256',
   })
-    .then(decoded => decoded)
-    .catch(err => {
+    .then((decoded) => decoded)
+    .catch((err) => {
       console.error({
         type: 'error verifying token',
         message: err.message,

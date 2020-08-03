@@ -52,7 +52,7 @@ async function updateUserRefreshToken(userid, token) {
 async function updateRecordInUserTable(userid, record) {
   let updateExpression = ''
   let expressionAttributeValues = {}
-  Object.keys(record).forEach(k => {
+  Object.keys(record).forEach((k) => {
     updateExpression = `${updateExpression}${k} = :${k}, `
     expressionAttributeValues[`:${k}`] = record[k]
   })
@@ -118,7 +118,7 @@ async function getDocument(docid) {
 async function updateRecordInDocTable(docid, record) {
   let updateExpression = ''
   let expressionAttributeValues = {}
-  Object.keys(record).forEach(k => {
+  Object.keys(record).forEach((k) => {
     updateExpression = `${updateExpression}${k} = :${k}, `
     expressionAttributeValues[`:${k}`] = record[k]
   })
@@ -167,7 +167,7 @@ async function getNamesFromTable(prefix) {
     })
     .promise()
   const list = result.Items
-  return list.map(v => ({ name: v.name, username: v.userid }))
+  return list.map((v) => ({ name: v.name, username: v.userid }))
 }
 
 // generic methods
