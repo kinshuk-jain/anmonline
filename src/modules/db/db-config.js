@@ -55,7 +55,6 @@ const refreshTokenTableParams = {
 
 /**
  * documents table schema
-    - docType
     - size
     - mimeType
     - docid
@@ -67,7 +66,7 @@ const refreshTokenTableParams = {
     - lastAccessedBy (name)
     - timesAccessed
     - s3Reference
-    - metadata
+    - metadata (docType subType and year)
  */
 const documentsTableParams = {
   TableName: TableNames.DOCUMENTS /* required */,

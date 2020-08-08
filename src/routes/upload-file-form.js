@@ -42,8 +42,6 @@ const uploadFileFormHandler = async (req, res) => {
 
   pendingList.slice(-numOfFilesUploaded).forEach(async (docid) => {
     await dbmethods.updateRecordInDocTable(docid, {
-      docType,
-      subType,
       createdFor: {
         name: uploadedForUser.name,
         userid: uploadedForUser.userid,
@@ -51,6 +49,8 @@ const uploadFileFormHandler = async (req, res) => {
       uploadedBy: { name: user.name, userid: user.userid },
       metadata: {
         year,
+        subType,
+        docType,
       },
       timesAccessed: 0,
     })
