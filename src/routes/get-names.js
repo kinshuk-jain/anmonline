@@ -13,7 +13,7 @@ const getNamesHandler = async (req, res) => {
     return res.status(403).send(res.body)
   }
 
-  let { prefix } = req.body
+  let { prefix = '' } = req.body
 
   prefix = sanitize(prefix)
   const nameList = (await DBMethods.getNamesFromTable(prefix)) || []
