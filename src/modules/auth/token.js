@@ -79,6 +79,7 @@ async function verifyRefreshToken(refresh) {
 
 // delete refresh token
 async function deleteRefreshTokenForUser(userid) {
+  if (!userid) return
   const user = await DBMethods.getUser(userid)
   await DBMethods.updateUserRefreshToken(userid, 'empty')
   await DBMethods.deleteRefreshToken(user.refreshToken)

@@ -4,7 +4,7 @@ const { s3Delete } = require('../modules/s3')
 const { USER_ROLES } = require('../constants/general')
 
 const deleteFileHandler = async (req, res) => {
-  const user = (await DBMethods.getUser(req.userid)) || {}
+  const user = (await dbmethods.getUser(req.userid)) || {}
   const role = user.role
 
   if (user.role !== USER_ROLES.ADMIN && user.role !== USER_ROLES.OWNER) {
@@ -16,7 +16,7 @@ const deleteFileHandler = async (req, res) => {
 
   let { q: docid } = req.query
   docid = sanitize(docid, 'id')
-  const doc = (await DBMethods.getDocument(docid)) || {}
+  const doc = (await dbmethods.getDocument(docid)) || {}
 
   if (doc.docid !== docid) {
     return res.status(404).send({ error: 'Document does not exist' })

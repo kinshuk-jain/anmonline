@@ -6,7 +6,6 @@ const { TableNames } = require('../modules/db/db-config')
 const { USER_ROLES, DISALLOWED_MIME_TYPES } = require('../constants/general')
 const { s3Upload } = require('../modules/s3')
 
-// TODO: compress files before uploading to s3
 const uploadFileHandler = async (req, res, next) => {
   const user = (await dbmethods.getUser(req.userid)) || {}
   if (user.role !== USER_ROLES.ADMIN && user.role !== USER_ROLES.OWNER) {
