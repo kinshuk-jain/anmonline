@@ -52,7 +52,7 @@ function sendEmail({
 }
 
 function sendLoginCredsEmail(
-  recipient = ['kinshuk2jain@gmail.com'],
+  recipient = [''],
   username,
   password
 ) {
