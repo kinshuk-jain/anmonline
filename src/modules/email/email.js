@@ -51,11 +51,7 @@ function sendEmail({
   })
 }
 
-function sendLoginCredsEmail(
-  recipient = [''],
-  username,
-  password
-) {
+function sendLoginCredsEmail(recipient = [''], username, password) {
   if (!Array.isArray(recipient)) {
     throw 'recipient must be an array of recipients'
   }

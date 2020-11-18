@@ -155,12 +155,12 @@ async function getNamesFromTable(prefix) {
     .scan({
       TableName: TableNames.USER,
       ExpressionAttributeNames: {
-        '#name': 'name',
+        '#name': 'lower_name',
         '#role': 'role',
       },
       FilterExpression: 'begins_with(#name, :prefix) AND #role <> :admin',
       ExpressionAttributeValues: {
-        ':prefix': prefix,
+        ':prefix': prefix.toLowerCase(),
         ':admin': 'admin',
       },
       PageSize: '10',
